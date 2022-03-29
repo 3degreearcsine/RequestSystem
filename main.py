@@ -10,7 +10,6 @@ from database import engine, get_db
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
-
 app.include_router(auth.router)
 
 @app.post("/register", status_code=status.HTTP_201_CREATED, response_model=schemas.RegiOut)
@@ -21,7 +20,6 @@ def create_user(user: schemas.Registration, db: Session = Depends(get_db)):
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
-
     return new_user
 
 @app.get("/profile/{id}",  response_model=schemas.UserDetails)
