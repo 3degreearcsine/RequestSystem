@@ -18,7 +18,8 @@ class Users(Base):
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     last_updated = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'),
                           server_onupdate=text('now()'))
-    CheckConstraint("role IN ('Student', 'Admin', 'Tutor')")
+    __table_args__ = (CheckConstraint(role.in_(['Student', 'Admin'])),)
+
 
 conint = mysql.INTEGER
 
@@ -33,7 +34,8 @@ class Student(Base):
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     last_updated = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'),
                           server_onupdate=text('now()'))
-    CheckConstraint("course_name IN('Python', 'Java')")
+    __table_args__ = (CheckConstraint(course_name.in_(['Python', 'Java'])),)
+
 
 class Admin(Base):
     __tablename__ = 'Admin'
@@ -57,7 +59,7 @@ class Tutor(Base):
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     last_updated = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'),
                           server_onupdate=text('now()'))
-    CheckConstraint("tutor_of IN('Python', 'Java')")
+    __table_args__ = (CheckConstraint(tutor_of.in_(['Python', 'Java'])),)
 
 
 class RecRequest(Base):
@@ -71,8 +73,9 @@ class RecRequest(Base):
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     last_updated = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'),
                           server_onupdate=text('now()'))
-    CheckConstraint("req_status IN('Pending', 'Approved', 'Rejected', 'Accepted')")
-    CheckConstraint("subject IN('Python', 'Java')")
+    __table_args__ = (CheckConstraint(req_status.in_(['Pending', 'Approved', 'Rejected', 'Accepted'])),
+                      CheckConstraint(subject.in_(['Python', 'Java'])))
+
 
 
 class SessionRequest(Base):
@@ -86,7 +89,8 @@ class SessionRequest(Base):
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     last_updated = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'),
                           server_onupdate=text('now()'))
-    CheckConstraint("req_status IN('Pending','Queued', 'Rejected', 'Accepted')")
-    CheckConstraint("subject IN('Python', 'Java')")
+    __table_args__ = (CheckConstraint(req_status.in_(['Pending', 'Approved', 'Rejected', 'Accepted'])),
+                      CheckConstraint(subject.in_(['Python', 'Java'])))
+
 
 
