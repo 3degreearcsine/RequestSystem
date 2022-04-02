@@ -4,6 +4,7 @@ import models
 import schemas
 import utils
 import auth
+import oauth2
 from database import engine, get_db
 
 
@@ -23,7 +24,8 @@ def create_user(user: schemas.Registration, db: Session = Depends(get_db)):
     return new_user
 
 @app.get("/profile/{id}",  response_model=schemas.UserDetails)
-def user_profile(id: int, db: Session = Depends(get_db)):
+def user_profile(id: int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+    print(current_user)
     user = db.query(models.Users).filter(models.Users.id == id).first()
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with id: {id} does not exist")
