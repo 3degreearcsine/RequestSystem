@@ -1,3 +1,5 @@
+import datetime
+
 from pydantic import BaseModel, EmailStr
 from typing import Optional
 
@@ -19,6 +21,42 @@ class RegiOut(BaseModel):
     class Config:
         orm_mode = True
 
+class RecReq(BaseModel):
+    lec_date: datetime.date
+    subject: str
+    req_reason: str
+
+class RecReqOut(BaseModel):
+    req_id: int
+    stu_email: str
+    lec_date: datetime.date
+    subject: str
+    req_reason: str
+    req_status: str
+    created_at: datetime.datetime
+    last_updated: datetime.datetime
+
+    class Config:
+        orm_mode = True
+
+class DCSReq(BaseModel):
+    subject: str
+    topic: str
+    req_reason: str
+
+class DCSReqOut(BaseModel):
+    req_id: int
+    stu_email: str
+    subject: str
+    topic: str
+    req_reason: str
+    req_status: str
+    created_at: datetime.datetime
+    last_updated: datetime.datetime
+
+    class Config:
+        orm_mode = True
+
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
@@ -36,4 +74,6 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     id: Optional[str] = None
+    email: Optional[str] = None
+    role: Optional[str] = None
 
