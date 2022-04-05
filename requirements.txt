@@ -8,3 +8,4 @@ uvicorn
 aiomysql
 mysql-connector-python
 email-validator
+jose
