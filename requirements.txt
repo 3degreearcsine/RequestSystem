@@ -9,3 +9,4 @@ aiomysql
 mysql-connector-python
 email-validator
 python-jose
+python-multipart
