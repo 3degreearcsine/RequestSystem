@@ -3,4 +3,4 @@ SQLAlchemy~=1.4.32
 databases~=0.5.5
 fastapi~=0.75.0
 passlib~=1.7.4
-gunicorn
+gunicorn~=20.1.0
