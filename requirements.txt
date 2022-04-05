@@ -35,7 +35,6 @@ idna~=2.10
 importlib-metadata~=4.0.1
 jeepney~=0.7.1
 keyring~=23.0.1
-language-selector~=0.1
 launchpadlib~=1.10.13
 lib~=4.0.0
 lockfile~=0.12.2
