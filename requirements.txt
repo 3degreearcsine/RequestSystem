@@ -5,3 +5,4 @@ fastapi~=0.75.0
 passlib~=1.7.4
 gunicorn~=20.1.0
 uvicorn
+aiomysql~=0.0.22
