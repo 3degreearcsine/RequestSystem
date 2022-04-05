@@ -21,6 +21,7 @@ class RegiOut(BaseModel):
     class Config:
         orm_mode = True
 
+
 class RecReq(BaseModel):
     lec_date: datetime.date
     subject: str
@@ -77,3 +78,7 @@ class TokenData(BaseModel):
     email: Optional[str] = None
     role: Optional[str] = None
 
+class log_out(BaseModel):
+    token: Optional[str] = None
+    class Config:
+        orm_mode = True

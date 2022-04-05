@@ -2,7 +2,7 @@ import sqlalchemy
 from sqlalchemy import Column, Integer, DateTime, CheckConstraint, ForeignKey
 from sqlalchemy.sql.expression import text
 from sqlalchemy.sql.sqltypes import TIMESTAMP, VARCHAR
-from database import Base
+from dbase.database import Base
 from sqlalchemy.dialects import mysql
 
 metadata = sqlalchemy.MetaData()
@@ -18,7 +18,7 @@ class Users(Base):
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     last_updated = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'),
                           server_onupdate=text('now()'))
-    __table_args__ = (CheckConstraint(role.in_(['Student', 'Admin'])),)
+    __table_args__ = (CheckConstraint(role.in_(['Student', 'Admin', 'Tutor'])),)
 
 
 conint = mysql.INTEGER
@@ -93,6 +93,12 @@ class SessionRequest(Base):
                           server_onupdate=text('now()'))
     __table_args__ = (CheckConstraint(req_status.in_(['Pending', 'Approved', 'Rejected', 'Accepted'])),
                       CheckConstraint(subject.in_(['Python', 'Java'])))
+
+class BlackListedTokens(Base):
+    __tablename__ = 'Blacklists'
+    token_id = Column(Integer, primary_key=True, nullable=False)
+    token = Column(VARCHAR(250), unique=True)
+    email = Column(VARCHAR(40))
 
 
 

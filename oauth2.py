@@ -3,7 +3,8 @@ from datetime import datetime,timedelta
 from fastapi import Depends, status, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 import schemas
-from config import settings
+import utils
+from dbase.config import settings
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
@@ -16,21 +17,31 @@ def create_access_token(data: dict):
     encoded_jwt = jwt.encode(to_encode, settings.secret_key, algorithm=settings.algorithm)
     return encoded_jwt
 
-def verify_access_token(token: str, credentials_exception):
+def get_user_token(token:str = Depends(oauth2_scheme)):
+    return token
 
+
+def verify_access_token(token: str, credentials_exception):
     try:
         payload = jwt.decode(token, settings.secret_key, algorithms=settings.algorithm)
         id: str = payload.get("user_id")
         email: str = payload.get("user_email")
         role: str = payload.get("user_role")
 
-
         if id is None:
             raise credentials_exception
+
+
         token_data = schemas.TokenData(id=id, email=email, role=role)
+
+
+        blacklisted = utils.check_if_blacklisted(token)
+
+        if blacklisted:
+            raise credentials_exception
+
     except JWTError:
         raise credentials_exception
-
     return token_data
 
 def get_current_user(token: str = Depends(oauth2_scheme)):
