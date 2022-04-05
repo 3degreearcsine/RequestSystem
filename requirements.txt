@@ -6,3 +6,4 @@ passlib
 gunicorn
 uvicorn
 aiomysql
+mysql-connector-python
