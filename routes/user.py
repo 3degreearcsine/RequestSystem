@@ -8,7 +8,7 @@ from dbase.database import get_db
 
 router = APIRouter(tags=['User Profile'])
 
-@router.post("/register", status_code=status.HTTP_201_CREATED, response_model=schemas.RegiOut)
+@router.post("/register", status_code=status.HTTP_201_CREATED, response_model=schemas.RegistrationOut)
 def create_user(user: schemas.Registration, db: Session = Depends(get_db)):
     hashed_password = utils.hash(user.password)
     user.password = hashed_password
@@ -17,6 +17,7 @@ def create_user(user: schemas.Registration, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_user)
     return new_user
+
 
 @router.get("/profile",  response_model=schemas.UserDetails)
 def user_profile(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):

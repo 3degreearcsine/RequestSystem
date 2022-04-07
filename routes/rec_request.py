@@ -8,7 +8,6 @@ from pydantic.class_validators import List
 
 router = APIRouter(tags=['Recording Request'])
 
-
 @router.post("/profile/new_rrf", status_code=status.HTTP_201_CREATED, response_model=schemas.RecReqOut)
 def user_new_rrf(n_req: schemas.RecReq, db: Session = Depends(get_db),
                  current_user: int = Depends(oauth2.get_current_user)):
@@ -18,6 +17,7 @@ def user_new_rrf(n_req: schemas.RecReq, db: Session = Depends(get_db),
     db.commit()
     db.refresh(new_req)
     return new_req
+
 
 @router.get("/profile/rrf_history", response_model=List[schemas.RecReqOut])
 def user_rrf_history(db: Session = Depends(get_db),

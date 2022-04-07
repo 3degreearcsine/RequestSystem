@@ -13,5 +13,5 @@ async def verfiy(plain_password, hashed_password):
 def check_if_blacklisted(token: str):
     b_l_t = Query([models.BlackListedTokens]).filter(models.BlackListedTokens.token == token)
 
-    result = b_l_t.with_session(database.session).first()
-    return result
+    b_l_t_result = b_l_t.with_session(database.session).first()
+    return b_l_t_result

@@ -19,8 +19,8 @@ def user_new_dcsrf(n_dcsreq: schemas.DCSReq, db: Session = Depends(get_db),
 
 
 @router.get("/profile/dcsf_history", response_model=List[schemas.DCSReqOut])
-def user_dcsf_history(db: Session = Depends(get_db),
-                 current_user: int = Depends(oauth2.get_current_user)):
+def user_dcsrf_history(db: Session = Depends(get_db),
+                       current_user: int = Depends(oauth2.get_current_user)):
     print(current_user)
-    dcsf_his = db.query(models.SessionRequest).filter(models.SessionRequest.stu_email == current_user.email).all()
-    return dcsf_his
+    dcsrf_his = db.query(models.SessionRequest).filter(models.SessionRequest.stu_email == current_user.email).all()
+    return dcsrf_his

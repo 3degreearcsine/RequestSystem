@@ -21,7 +21,7 @@ class Users(Base):
     __table_args__ = (CheckConstraint(role.in_(['Student', 'Admin', 'Tutor'])),)
 
 
-conint = mysql.INTEGER
+contact_int = mysql.INTEGER
 
 class Student(Base):
     __tablename__ = 'Student'
@@ -30,7 +30,7 @@ class Student(Base):
     dob = Column(DateTime, nullable=False)
     course_name = Column(VARCHAR(20), nullable=False)
     address = Column(VARCHAR(100), nullable=False)
-    contact_no = Column(conint(10))
+    contact_no = Column(contact_int(10))
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     last_updated = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'),
                           server_onupdate=text('now()'))
@@ -43,7 +43,7 @@ class Admin(Base):
     user_id = Column(Integer, ForeignKey("User.id"), nullable=False)
     dob = Column(DateTime, nullable=False)
     address = Column(VARCHAR(100), nullable=False)
-    contact_no = Column(conint(10))
+    contact_no = Column(contact_int(10))
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     last_updated = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'),
                           server_onupdate=text('now()'))
@@ -55,7 +55,7 @@ class Tutor(Base):
     tutor_of = Column(VARCHAR(20), nullable=False, unique=True)
     dob = Column(DateTime, nullable=False)
     address = Column(VARCHAR(100), nullable=False)
-    contact_no = Column(conint(10))
+    contact_no = Column(contact_int(10))
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     last_updated = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'),
                           server_onupdate=text('now()'))
