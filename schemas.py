@@ -34,11 +34,21 @@ class RecReqOut(BaseModel):
     subject: str
     req_reason: str
     req_status: str
+    comment: Optional[str]
     created_at: datetime.datetime
     last_updated: datetime.datetime
 
     class Config:
         orm_mode = True
+
+class ReqDelete(BaseModel):
+    req_id: int
+
+
+class ReqAction(BaseModel):
+    req_id: int
+    req_status: str
+    comment: Optional[str]
 
 
 class DCSReq(BaseModel):
@@ -54,6 +64,7 @@ class DCSReqOut(BaseModel):
     topic: str
     req_reason: str
     req_status: str
+    comment: Optional[str]
     created_at: datetime.datetime
     last_updated: datetime.datetime
 
