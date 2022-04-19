@@ -26,3 +26,7 @@ def check_course(id: int, subject: str):
     chk_course_result = chk_course.with_session(database.session).first()
     return chk_course_result
 
+def check_tutor_course(id: int):
+    chk_tut_course = Query([models.Tutor]).filter(models.Tutor.user_id == id)
+    chk_tut_course_result = chk_tut_course.with_session(database.session).first()
+    return chk_tut_course_result
