@@ -39,8 +39,8 @@ def home():
         <body>
             <h1>Welcome to the request System</h1>
             <h2> Please Register if your are a new user or Login if you are existing user</h2>
-            <button class="button button1" onclick="location.href='http://127.0.0.1:8000/login';">Login</button><br>
-            <button class="button button2" onclick="location.href='http://127.0.0.1:8000/register';">Register</button>
+            <button class="button button1" onclick="location.href='https://reqsys.azurewebsites.net/login';">Login</button><br>
+            <button class="button button2" onclick="location.href='https://reqsys.azurewebsites.net/register';">Register</button>
         </body>
     <html>
     """
