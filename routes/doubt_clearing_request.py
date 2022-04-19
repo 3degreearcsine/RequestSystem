@@ -14,7 +14,7 @@ router = APIRouter(tags=['Doubt Clearing Request'])
 def user_new_dcsrf(n_dcsreq: schemas.DCSReq, db: Session = Depends(get_db),
                    current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'Student':
-        match_sub = utils.check_course(n_dcsreq.subject)
+        match_sub = utils.check_course(current_user.id, n_dcsreq.subject)
         if match_sub:
             new_dcsreq = models.SessionRequest(stu_email=current_user.email, **n_dcsreq.dict())
             db.add(new_dcsreq)

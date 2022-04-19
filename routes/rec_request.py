@@ -14,7 +14,7 @@ router = APIRouter(tags=['Recording Request'])
 def user_new_rrf(n_req: schemas.RecReq, db: Session = Depends(get_db),
                  current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'Student':
-        match_req_sub = utils.check_course(n_req.subject)
+        match_req_sub = utils.check_course(current_user.id, n_req.subject)
         if match_req_sub:
             new_req = models.RecRequest(stu_email=current_user.email, **n_req.dict())
             db.add(new_req)
