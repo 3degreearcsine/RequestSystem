@@ -2,7 +2,7 @@
 
 ### Description
 
-Request System is desgined to provide a platform for any online academy students where they can request the recordings of the missed lectures or if they want to rewatch some part of the lecture.  
+Request System is desgined to provide a platform for Online Academy students where they can request the recordings of the missed lectures or if they want to rewatch some part of the lecture.  
 Also they can request a dobut clearing session as well for their respective courses.  
 Objective of the project is to help Admistration team of online academys' to smoothly track and serve requests of their students.  
 
