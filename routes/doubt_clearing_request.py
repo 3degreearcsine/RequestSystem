@@ -35,7 +35,7 @@ def user_dcsrf_history(db: Session = Depends(get_db),
 
 
 @router.delete("/student_profile/dcsr/delete_dcsf")
-def user_delete_rrf(d_req: schemas.ReqDelete, db: Session = Depends(get_db),
+def user_delete_dcsf(d_req: schemas.ReqDelete, db: Session = Depends(get_db),
                     current_user: int = Depends(oauth2.get_current_user)):
     del_req = db.query(models.SessionRequest).filter(models.SessionRequest.stu_email == current_user.email,
                                                      models.SessionRequest.req_id == d_req.req_id)
