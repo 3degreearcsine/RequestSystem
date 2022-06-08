@@ -18,6 +18,6 @@ Objective of the project is to help Admistration team of online academys' to smo
 * JSON Web Token
 * Frontend - HTML/CSS
 
-##Future Updates
+###Future Updates
 
-*About to make changes as per the feedback received from Fynd's interview panel.
+About to make changes as per the feedback received from Fynd's interview panel.
