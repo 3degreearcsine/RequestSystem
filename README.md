@@ -17,3 +17,7 @@ Objective of the project is to help Admistration team of online academys' to smo
 * ORM - SQLAlchemy
 * JSON Web Token
 * Frontend - HTML/CSS
+
+##Future Updates
+
+*About to make changes as per the feedback received from Fynd's interview panel.
