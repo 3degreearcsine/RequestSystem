@@ -1,6 +1,6 @@
 from passlib.context import CryptContext
 from sqlalchemy.orm import Query
-from dbase import models, database
+from app.dbase import models, database
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

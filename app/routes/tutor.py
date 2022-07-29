@@ -1,10 +1,8 @@
 from sqlalchemy.orm import Session
-import schemas
-import utils
-from dbase import models
+from app import schemas, oauth2, utils
+from app.dbase import models
 from fastapi import Depends, status, APIRouter, Response, HTTPException
-import oauth2
-from dbase.database import get_db
+from app.dbase.database import get_db
 from pydantic.class_validators import List
 
 router = APIRouter(tags=['Staff'])
@@ -14,7 +12,8 @@ def all_pending_requests(db: Session = Depends(get_db), current_user: int = Depe
     if current_user.role == 'Tutor':
         chk_tut_sub = utils.check_tutor_course(current_user.id)
 
-        dcsf_a_pending = db.query(models.SessionRequest).filter(models.SessionRequest.subject == chk_tut_sub.tutor_of).filter(models.SessionRequest.req_status == 'Forwarded').all()
+        dcsf_a_pending = db.query(models.SessionRequest).filter(models.SessionRequest.subject == chk_tut_sub.tutor_of).filter(
+            models.SessionRequest.req_status == 'Forwarded').all()
         return dcsf_a_pending
     return Response(status_code=status.HTTP_403_FORBIDDEN)
 

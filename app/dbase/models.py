@@ -2,7 +2,7 @@ import sqlalchemy
 from sqlalchemy import Column, Integer, DateTime, CheckConstraint, ForeignKey
 from sqlalchemy.sql.expression import text
 from sqlalchemy.sql.sqltypes import TIMESTAMP, VARCHAR
-from dbase.database import Base
+from app.dbase.database import Base
 from sqlalchemy.dialects import mysql
 
 metadata = sqlalchemy.MetaData()

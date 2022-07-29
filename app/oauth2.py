@@ -2,9 +2,9 @@ from jose import JWTError, jwt
 from datetime import datetime,timedelta
 from fastapi import Depends, status, HTTPException
 from fastapi.security import OAuth2PasswordBearer
-import schemas
-import utils
-from dbase.config import settings
+from app import schemas
+from app import utils
+from app.dbase.config import settings
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 

@@ -1,10 +1,8 @@
 from sqlalchemy.orm import Session
-import schemas
-import utils
-from dbase import models
+from app import schemas, oauth2, utils
+from app.dbase import models
 from fastapi import Depends, status, APIRouter, Response, HTTPException
-import oauth2
-from dbase.database import get_db
+from app.dbase.database import get_db
 from pydantic.class_validators import List
 
 router = APIRouter(tags=['Recording Request'])

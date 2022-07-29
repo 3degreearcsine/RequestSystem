@@ -1,10 +1,8 @@
 from sqlalchemy.orm import Session
-import schemas
-from dbase import models
-import utils
+from app import schemas, oauth2, utils
+from app.dbase import models
 from fastapi import Depends, status, APIRouter, Response, HTTPException
-import oauth2
-from dbase.database import get_db, session
+from app.dbase.database import get_db, session
 from pydantic.class_validators import List
 
 router = APIRouter(tags=['User Profile'])
@@ -58,7 +56,8 @@ def add_student_info(student: schemas.StudentInfo, db: Session = Depends(get_db)
 def student_profile(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     # Left outer join
     s_updated_profile = db.query(models.Users, models.Student).join(models.Student, models.Student.user_id == models.Users.id,
-                                                                    isouter=True).filter(models.Student.user_id == current_user.id).first()
+                                                                    isouter=True).filter(
+        models.Student.user_id == current_user.id).first()
     return s_updated_profile
 
 
@@ -78,7 +77,8 @@ def add_admin_info(admin: schemas.AdminInfo, db: Session = Depends(get_db),
 def admin_profile(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     # Left outer join
     a_updated_profile = db.query(models.Users, models.Admin).join(models.Admin, models.Admin.user_id == models.Users.id,
-                                                                  isouter=True).filter(models.Admin.user_id == current_user.id).first()
+                                                                  isouter=True).filter(
+        models.Admin.user_id == current_user.id).first()
     return a_updated_profile
 
 
@@ -98,6 +98,7 @@ def add_tutor_info(tutor: schemas.TutorInfo, db: Session = Depends(get_db),
 def tutor_profile(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     # Left outer join
     t_updated_profile = db.query(models.Users, models.Tutor).join(models.Tutor, models.Tutor.user_id == models.Users.id,
-                                                                  isouter=True).filter(models.Tutor.user_id == current_user.id).first()
+                                                                  isouter=True).filter(
+        models.Tutor.user_id == current_user.id).first()
     return t_updated_profile
 
