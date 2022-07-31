@@ -1,32 +1,20 @@
 from sqlalchemy.orm import Session
 from app import schemas, oauth2, utils
 from app.dbase import models
-from fastapi import Depends, status, APIRouter, Response, HTTPException
+from fastapi import Depends, status, APIRouter, Response, HTTPException, Request
 from app.dbase.database import get_db, session
-from pydantic.class_validators import List
+from app import main
+
+
 
 router = APIRouter(tags=['User Profile'])
 
-
 @router.post("/register", status_code=status.HTTP_201_CREATED)
-def create_user(user: schemas.Registration = Depends(), db: Session = Depends(get_db)):
-    if user.role == 'Admin':
+def create_user(request: Request, user: schemas.Registration = Depends(), db: Session = Depends(get_db)):
+    if user.role == 'admin':
         admin_exist = utils.check_if_admin_exist(user.role)
-        print(admin_exist)
         if admin_exist:
-            return Response(status_code=status.HTTP_400_BAD_REQUEST)
-
-        hashed_password = utils.hash(user.password)
-        user.password = hashed_password
-
-        new_user = models.Users(**user.dict())
-        db.add(new_user)
-        db.commit()
-        db.refresh(new_user)
-        session.remove()
-        return {
-            "data": "Registration Successful."
-        }
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Admin User Already Exists")
 
     hashed_password = utils.hash(user.password)
     user.password = hashed_password
@@ -36,9 +24,9 @@ def create_user(user: schemas.Registration = Depends(), db: Session = Depends(ge
     db.commit()
     db.refresh(new_user)
     session.remove()
-    return {
-        "data": "Registration Successful."
-    }
+    data = "Registration Successful."
+    return main.templates.TemplateResponse('registration.html', context={'request': request, 'data': data, 'HTTPException': HTTPException})
+
 
 @router.post("/complete_student_profile")
 def add_student_info(student: schemas.StudentInfo, db: Session = Depends(get_db),
