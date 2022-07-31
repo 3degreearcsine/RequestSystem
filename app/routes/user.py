@@ -14,7 +14,8 @@ def create_user(request: Request, user: schemas.Registration = Depends(), db: Se
     if user.role == 'admin':
         admin_exist = utils.check_if_admin_exist(user.role)
         if admin_exist:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Admin User Already Exists")
+            invalid_user_exception = HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Admin User Already Exists")
+            return main.templates.TemplateResponse('registration.html', context={'request': request, 'error': invalid_user_exception.detail})
 
     hashed_password = utils.hash(user.password)
     user.password = hashed_password
@@ -25,7 +26,7 @@ def create_user(request: Request, user: schemas.Registration = Depends(), db: Se
     db.refresh(new_user)
     session.remove()
     data = "Registration Successful."
-    return main.templates.TemplateResponse('registration.html', context={'request': request, 'data': data, 'HTTPException': HTTPException})
+    return main.templates.TemplateResponse('registration.html', context={'request': request, 'data': data})
 
 
 @router.post("/complete_student_profile")

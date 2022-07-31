@@ -1,5 +1,7 @@
-from fastapi import FastAPI, status, Request
-from app.dbase import models
+from fastapi import FastAPI, status, Request, Depends
+from sqlalchemy.orm import Session
+
+from app.dbase import models, database
 from app.routes import admin, auth, user, doubt_clearing_request, rec_request, tutor
 from app.dbase.database import engine
 from fastapi.responses import HTMLResponse
