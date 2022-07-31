@@ -9,7 +9,7 @@ router = APIRouter(tags=['User Profile'])
 
 
 @router.post("/register", status_code=status.HTTP_201_CREATED)
-def create_user(user: schemas.Registration, db: Session = Depends(get_db)):
+def create_user(user: schemas.Registration = Depends(), db: Session = Depends(get_db)):
     if user.role == 'Admin':
         admin_exist = utils.check_if_admin_exist(user.role)
         print(admin_exist)

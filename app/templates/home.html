@@ -1,9 +1,11 @@
+<!DOCTYPE html>
 <html lang="en">
-        <head>
-            <title>Request System</title>
-            <link id="favicon" rel="icon" type="image/x-icon" href="/images/favicon.ico">
-            <style>
-            .button{
+<head>
+    <title>Request System</title>
+    <meta charset="UTF-8">
+    <link id="favicon" rel="icon" type="image/x-icon" href="/static/images/favicon.ico">
+    <style>
+        .button{
             border: none;
             color: white;
             padding: 15px 32px;
@@ -12,15 +14,162 @@
             font-size: 16px;
             margin: 4px 2px;
             cursor: pointer;
-            }
-            .button1{background-color: #4CAf50;}
-            .button2{background-color: #008CBA;}
-            </style>
-        </head>
-        <body>
-            <h1>Welcome to the request System</h1>
-            <h2> Please Register if you are a new user or Login if you are existing user</h2>
-            <button class="button button1" onclick="location.href='http://127.0.0.1:8000/login';">Login</button><br>
-            <button class="button button2" onclick="location.href='http://127.0.0.1:8000/register';">Register</button>
-        </body>
+        }
+        button:hover {
+            opacity: 0.8;
+        }
+
+        .button1{background-color: #4CAf50;}
+        .button2{background-color: #008CBA;}
+        .button3{
+            background-color: #008CBA;
+            width: 100%;
+        }
+        .button4{
+            background-color: #4CAf50;
+            width: 100%;
+        }
+
+        img {
+            width:60px;
+            height:60px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+            padding-top: 60px;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5px auto;
+            border: 1px solid #888;
+            width: 80%;
+        }
+        .close {
+
+            position: absolute;
+            right: 25px;
+            top: 0;
+            color: #000;
+            font-size: 35px;
+            font-weight: bold;
+        }
+        .close:hover,.close:focus {
+            color: red;
+            cursor: pointer;
+        }
+        .cancelbtn {
+            width: auto;
+            padding: 10px 18px;
+            background-color: #f44336;
+            border: none;
+            color: white;
+        }
+        input[type=text], input[type=password], input[type=email] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        .imgcontainer {
+            text-align: center;
+            margin: 24px 0 12px 0;
+            position: relative;
+
+        }
+        img.loginavtar {
+            border-radius: 40%;
+
+        }
+        img.registrationavtar {
+            border-radius: 70%;
+
+        }
+        .container {
+            padding: 16px;
+        }
+        select {
+            width: 100%;
+            padding: 12px 20px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+
+    </style>
+</head>
+<body>
+<header>
+    <a href='http://127.0.0.1:8000/'>
+        <img src="/static/images/Systemicon.png" alt="Request System" >
+    </a>
+</header>
+<h1>Welcome to the request System</h1>
+<h2> Please Register if you are a new user or Login if you are a existing user</h2>
+<button class="button button2" onclick="document.getElementById('id02').style.display='block'">Register</button>
+<button class="button button1" onclick="document.getElementById('id01').style.display='block'">Login</button>
+<div id="id01" class="modal">
+    <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
+    <!-- Modal Content -->
+    <form class="modal-content login" action="/login" method="post">
+        <div class="imgcontainer">
+            <img src="/static/images/loginicon.png" class="loginavtar">
+        </div>
+        <div class="container">
+            <label for="username"><b>Username</b></label>
+            <input type="text" placeholder="Enter Your Email" id="username" name="username" required>
+            <label for="password"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" id= "password" name="password" required>
+            <button class = "button button3" type="submit" >Login</button>
+        </div>
+        <div class="container" style="background-color:#f1f1f1">
+            <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel
+            </button>
+        </div>
+    </form>
+</div>
+<div id="id02" class="modal">
+    <span onclick="document.getElementById('id02').style.display='none'" class="close" title="Close Modal">&times;</span>
+    <!-- Modal Content -->
+    <form class="modal-content register" action="/register" method="post">
+        <div class="imgcontainer">
+            <img src="/static/images/registrationicon.png" class="registrationavtar">
+        </div>
+        <div class="container">
+            <label for="firstname"><b>First Name</b></label>
+            <input type="text" placeholder="Enter Your First Name" id="firstname" name="firstname" required>
+            <label for="lastname"><b>Last Name</b></label>
+            <input type="text" placeholder="Enter Your Last Name" id="lastname" name="lastname" required>
+            <label for="email"><b>Email Address</b></label>
+            <input type="email" placeholder="Enter Your Email" id="email" name="email" required>
+            <label for="password1"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" id= "password1" name="password" required>
+            <label for="role"><b>Role</b></label>
+            <select id= "role" name="role" required>
+                <option value="">None</option>
+                <option value="admin">Admin</option>
+                <option value="student">Student</option>
+                <option value="tutor">Tutor</option>
+            </select><br>
+            <button class = "button button4" type="submit" >Register</button>
+        </div>
+        <div class="container" style="background-color:#f1f1f1">
+            <button type="button" onclick="document.getElementById('id02').style.display='none'" class="cancelbtn">Cancel
+            </button>
+        </div>
+    </form>
+</div>
+</body>
 </html>
