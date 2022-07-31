@@ -1,7 +1,7 @@
 from jose import JWTError, jwt
 from datetime import datetime,timedelta
 from fastapi import Depends, status, HTTPException
-from fastapi.security import OAuth2PasswordBearer
+from fastapi.security import OAuth2PasswordBearer, HTTPBearer, HTTPBasicCredentials
 from app import schemas
 from app import utils
 from app.dbase.config import settings
@@ -30,6 +30,10 @@ def verify_access_token(token: str, credentials_exception):
         role: str = payload.get("user_role")
 
         if id is None:
+            raise credentials_exception
+        if email is None:
+            raise credentials_exception
+        if role is None:
             raise credentials_exception
 
         token_data = schemas.TokenData(id=id, email=email, role=role)

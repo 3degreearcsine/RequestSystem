@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Registration</title>
+    <title>Login</title>
     <style>
         .container{
             width: 100%;
@@ -48,10 +48,11 @@
             cursor: pointer;
             box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
         }
+
     </style>
 </head>
 <body>
-<div class ="container" id="1">
+<div class ="container" id="2">
     {% if error %}
 
     <div class ="popup" id="error">
@@ -60,15 +61,20 @@
         <button type="button" onclick="location.href='http://127.0.0.1:8000/'">OK</button>
     </div>
     {% endif %}
-    {% if data %}
+    {% if access_token %}
     <div class ="popup" id="popup">
         <img src="/static/images/tickmark.png">
         <h2>Thank You!</h2>
-        <p>{{data}} </p>
-        <button type="button" onclick="location.href='http://127.0.0.1:8000/'">OK</button>
+        <p>Login Successful!</p>
+        <p>{{access_token}}</p>
+        {% if role == 'student' %}
+        <button type="button" onclick="location.href='http://127.0.0.1:8000/student_profile'">OK</button>
+        {% elif role == 'tutor' %}}
+        <button type="button" onclick="location.href='http://127.0.0.1:8000/tutor_profile'">OK</button>
+        {% elif role == 'admin' %}
+        <button type="button" onclick="location.href='http://127.0.0.1:8000/admin_profile'">OK</button>
+        {% endif %}
     </div>
     {% endif %}
-</div>
 </body>
-</html>
 </html>

@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from app import schemas, oauth2, utils
 from app.dbase import models
 from fastapi import Depends, status, APIRouter, Response, HTTPException, Request
+from fastapi.responses import HTMLResponse
 from app.dbase.database import get_db, session
 from app import main
 
@@ -9,7 +10,7 @@ from app import main
 
 router = APIRouter(tags=['User Profile'])
 
-@router.post("/register", status_code=status.HTTP_201_CREATED)
+@router.post("/register", status_code=status.HTTP_201_CREATED, response_class=HTMLResponse)
 def create_user(request: Request, user: schemas.Registration = Depends(), db: Session = Depends(get_db)):
     if user.role == 'admin':
         admin_exist = utils.check_if_admin_exist(user.role)
@@ -32,7 +33,7 @@ def create_user(request: Request, user: schemas.Registration = Depends(), db: Se
 @router.post("/complete_student_profile")
 def add_student_info(student: schemas.StudentInfo, db: Session = Depends(get_db),
                      current_user: int = Depends(oauth2.get_current_user)):
-    if current_user.role == 'Student':
+    if current_user.role == 'student':
         new_student = models.Student(user_id=current_user.id, **student.dict())
         db.add(new_student)
         db.commit()
@@ -41,7 +42,7 @@ def add_student_info(student: schemas.StudentInfo, db: Session = Depends(get_db)
     return Response(status_code=status.HTTP_401_UNAUTHORIZED)
 
 
-@router.get("/student_profile", response_model=schemas.StudentAllDetails)
+@router.get("/student_profile", response_model=schemas.StudentAllDetails, )
 def student_profile(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     # Left outer join
     s_updated_profile = db.query(models.Users, models.Student).join(models.Student, models.Student.user_id == models.Users.id,
