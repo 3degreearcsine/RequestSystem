@@ -205,3 +205,4 @@ class TokenData(BaseModel):
     email: Optional[str] = None
     role: Optional[str] = None
     token: Optional[str] = None
+

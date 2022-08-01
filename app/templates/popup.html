@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+    <link id="favicon" rel="icon" type="image/x-icon" href="/static/images/favicon.ico">
     <style>
         .container{
             width: 100%;
@@ -54,27 +55,20 @@
 <body>
 <div class ="container" id="2">
     {% if error %}
-
     <div class ="popup" id="error">
         <img src="/static/images/error.png">
+        <h2>Error</h2>
        <p>{{error}} </p>
         <button type="button" onclick="location.href='http://127.0.0.1:8000/'">OK</button>
     </div>
     {% endif %}
-    {% if access_token %}
-    <div class ="popup" id="popup">
+    {% if detail %}
+    <div class ="popup" id="success">
         <img src="/static/images/tickmark.png">
-        <h2>Thank You!</h2>
-        <p>Login Successful!</p>
-        <p>{{access_token}}</p>
-        {% if role == 'student' %}
-        <button type="button" onclick="location.href='http://127.0.0.1:8000/student_profile'">OK</button>
-        {% elif role == 'tutor' %}}
-        <button type="button" onclick="location.href='http://127.0.0.1:8000/tutor_profile'">OK</button>
-        {% elif role == 'admin' %}
-        <button type="button" onclick="location.href='http://127.0.0.1:8000/admin_profile'">OK</button>
-        {% endif %}
+        <p>{{detail}}</p>
+        <button type="button" onclick="location.href='http://127.0.0.1:8000/'">OK</button>
     </div>
     {% endif %}
+</div>
 </body>
 </html>

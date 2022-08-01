@@ -7,7 +7,6 @@ from app.dbase.database import get_db, session
 from app import main
 
 
-
 router = APIRouter(tags=['User Profile'])
 
 @router.post("/register", status_code=status.HTTP_201_CREATED, response_class=HTMLResponse)
@@ -16,7 +15,7 @@ def create_user(request: Request, user: schemas.Registration = Depends(), db: Se
         admin_exist = utils.check_if_admin_exist(user.role)
         if admin_exist:
             invalid_user_exception = HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Admin User Already Exists")
-            return main.templates.TemplateResponse('registration.html', context={'request': request, 'error': invalid_user_exception.detail})
+            return main.templates.TemplateResponse('registration.html', context={'request': request, 'error': invalid_user_exception.detail}, status_code=invalid_user_exception.status_code)
 
     hashed_password = utils.hash(user.password)
     user.password = hashed_password
@@ -42,7 +41,7 @@ def add_student_info(student: schemas.StudentInfo, db: Session = Depends(get_db)
     return Response(status_code=status.HTTP_401_UNAUTHORIZED)
 
 
-@router.get("/student_profile", response_model=schemas.StudentAllDetails, )
+@router.get("/student_profile", response_model=schemas.StudentAllDetails)
 def student_profile(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     # Left outer join
     s_updated_profile = db.query(models.Users, models.Student).join(models.Student, models.Student.user_id == models.Users.id,
