@@ -11,10 +11,18 @@ router = APIRouter(tags=['User Profile'])
 
 @router.post("/register", status_code=status.HTTP_201_CREATED, response_class=HTMLResponse)
 def create_user(request: Request, user: schemas.Registration = Depends(), db: Session = Depends(get_db)):
+    email_exists = utils.check_if_email_exists(user.email)
+    if email_exists:
+        invalid_user_exception = HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                                               detail="Your email address is already registered with us.")
+        return main.templates.TemplateResponse('registration.html',
+                                               context={'request': request, 'error': invalid_user_exception.detail},
+                                               status_code=invalid_user_exception.status_code)
+
     if user.role == 'admin':
         admin_exist = utils.check_if_admin_exist(user.role)
         if admin_exist:
-            invalid_user_exception = HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Admin User Already Exists")
+            invalid_user_exception = HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Admin user already exists")
             return main.templates.TemplateResponse('registration.html', context={'request': request, 'error': invalid_user_exception.detail}, status_code=invalid_user_exception.status_code)
 
     hashed_password = utils.hash(user.password)

@@ -9,7 +9,7 @@ metadata = sqlalchemy.MetaData()
 
 
 class Users(Base):
-    __tablename__ = 'User'
+    __tablename__ = 'user'
     id = Column(Integer, primary_key=True, nullable=False)
     firstname = Column(VARCHAR(30), primary_key=False, nullable=False)
     lastname = Column(VARCHAR(30), primary_key=False, nullable=True)
@@ -24,7 +24,7 @@ class Users(Base):
 contact_int = mysql.BIGINT
 
 class Student(Base):
-    __tablename__ = 'Student'
+    __tablename__ = 'student'
     stu_id = Column(Integer, primary_key=True, nullable=False)
     user_id = Column(Integer, ForeignKey("User.id"), nullable=False, unique=True)
     dob = Column(DateTime, nullable=False)
@@ -38,7 +38,7 @@ class Student(Base):
 
 
 class Admin(Base):
-    __tablename__ = 'Admin'
+    __tablename__ = 'admin'
     admin_id = Column(Integer, primary_key=True, nullable=False)
     user_id = Column(Integer, ForeignKey("User.id"), nullable=False, unique=True)
     dob = Column(DateTime, nullable=False)
@@ -50,7 +50,7 @@ class Admin(Base):
 
 
 class Tutor(Base):
-    __tablename__ = 'Tutor'
+    __tablename__ = 'tutor'
     tutor_id = Column(Integer, primary_key=True, nullable=False)
     user_id = Column(Integer, ForeignKey("User.id"), nullable=False, unique=True)
     tutor_of = Column(VARCHAR(20), nullable=False, unique=True)
@@ -64,7 +64,7 @@ class Tutor(Base):
 
 
 class RecRequest(Base):
-    __tablename__ = 'RecReq'
+    __tablename__ = 'recreq'
     req_id = Column(Integer, primary_key=True, nullable=False)
     stu_email = Column(VARCHAR(40), ForeignKey("User.email"), primary_key=False, nullable=False)
     lec_date = Column(DateTime, nullable=False)
@@ -79,7 +79,7 @@ class RecRequest(Base):
 
 
 class SessionRequest(Base):
-    __tablename__ = 'DCSReq'
+    __tablename__ = 'dcsreq'
     req_id = Column(Integer, primary_key=True, nullable=False)
     stu_email = Column(VARCHAR(40), ForeignKey("User.email"), primary_key=False, nullable=False)
     subject = Column(VARCHAR(20), nullable=False)
@@ -94,7 +94,7 @@ class SessionRequest(Base):
 
 
 class BlackListedTokens(Base):
-    __tablename__ = 'Blacklists'
+    __tablename__ = 'blacklists'
     token_id = Column(Integer, primary_key=True, nullable=False)
     token = Column(VARCHAR(250), unique=True)
     email = Column(VARCHAR(40))

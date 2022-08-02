@@ -24,8 +24,13 @@ def check_if_admin_exist(role: str):
     chk_admin_exist_result = chk_admin_exist.with_session(database.session).first()
     return chk_admin_exist_result
 
-def check_if_profile_complete(role: str):
+def check_if_profile_complete(user_id: int):
     pass
+
+def check_if_email_exists(email: str):
+    chk_email_exists =  Query([models.Users]).filter(models.Users.email == email)
+    chk_email_exists_result = chk_email_exists.with_session(database.session).first()
+    return chk_email_exists_result
 
 def check_course(id: int, subject: str):
     chk_course = Query([models.Student]).filter(models.Student.user_id == id).filter(models.Student.course_name

@@ -1,5 +1,4 @@
 from typing import Optional
-
 from fastapi.security.utils import get_authorization_scheme_param
 from jose import JWTError, jwt
 from datetime import datetime,timedelta
@@ -94,30 +93,6 @@ def verify_access_token(token: str, credentials_exception):
         raise credentials_exception
     return token_data
 
-# def verify_access_token(request, credentials_exception):
-#     # try:
-#     token = request.cookies.get("Authorization")
-#     payload = jwt.decode(token, settings.secret_key, algorithms=settings.algorithm)
-#     id: str = payload.get("user_id")
-#     email: str = payload.get("user_email")
-#     role: str = payload.get("user_role")
-#
-#     if id is None:
-#         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Error 1")
-#     if email is None:
-#         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Error 2")
-#     if role is None:
-#         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Error 3")
-#
-#     token_data = schemas.TokenData(id=id, email=email, role=role)
-#
-#     blacklisted = utils.check_if_blacklisted(token)
-#     if blacklisted:
-#         raise credentials_exception
-#
-#     # except JWTError:
-#     #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="JWT Error")
-#     return token_data
 
 def get_current_user(token: str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
@@ -126,9 +101,3 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
 
     return verify_access_token(token, credentials_exception)
 
-# def get_current_user(request: Request):
-#     credentials_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-#                                           detail=f"Could not validate credentials",
-#                                           headers={"WWW-Authenticate": "Bearer"})
-#
-#     return verify_access_token(request, credentials_exception)
