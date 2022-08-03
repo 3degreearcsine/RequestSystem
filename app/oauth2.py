@@ -92,7 +92,6 @@ def verify_access_token(token: str, credentials_exception, token_expired):
             raise credentials_exception
 
     except jwt.ExpiredSignatureError:
-
         raise token_expired
 
     except JWTError:
