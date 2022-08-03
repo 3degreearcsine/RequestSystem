@@ -1,6 +1,9 @@
 from passlib.context import CryptContext
 from sqlalchemy.orm import Query
 from app.dbase import models, database
+from jose import JWTError, jwt
+from app.dbase.config import settings
+from datetime import datetime, timedelta
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -26,6 +29,16 @@ def check_if_admin_exist(role: str):
 
 def check_if_profile_complete(user_id: int):
     pass
+
+def check_if_token_expired(token: str):
+    try:
+        jwt.decode(token, settings.secret_key, algorithms=settings.algorithm)
+    except jwt.ExpiredSignatureError:
+        return True
+
+    # return (payload)
+    # expiry = payload.get("exp")
+    # return datetime.utcnow() + timedelta(minutes=0) > expiry
 
 def check_if_email_exists(email: str):
     chk_email_exists =  Query([models.Users]).filter(models.Users.email == email)

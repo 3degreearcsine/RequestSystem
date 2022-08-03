@@ -11,15 +11,13 @@ router = APIRouter(tags=['Authentication'])
 @router.post("/login")
 def login(request: Request, user_credentials: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(database.get_db)):
     token = request.cookies.get("Authorization")
-    print(token)
     if token:
-        updated_token = token.removesuffix('Bearer ')
-        print(updated_token)
-        token_exists = utils.check_if_blacklisted(updated_token)
-        print(token_exists)
-        if not token_exists:
-            # return RedirectResponse(url="/logout", status_code=status.HTTP_200_OK)
-            return main.templates.TemplateResponse('popup.html', context={'request': request, 'not_logged_out': 'Please logout to continue'}, status_code=status.HTTP_403_FORBIDDEN)
+        updated_token = token.removeprefix("Bearer ")
+        expired_token = utils.check_if_token_expired(updated_token)
+        if not expired_token:
+            token_exists = utils.check_if_blacklisted(updated_token)
+            if not token_exists:
+                return main.templates.TemplateResponse('popup.html', context={'request': request, 'not_logged_out': 'Please logout to continue'}, status_code=status.HTTP_403_FORBIDDEN)
     user = db.query(models.Users).filter(models.Users.email == user_credentials.username.lower()).first()
     if not user:
         invalid_username_exception = HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=f"Invalid Credentials")
