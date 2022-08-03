@@ -1,5 +1,5 @@
 import datetime
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, constr
 from typing import Optional
 from fastapi import Form
 
@@ -13,13 +13,14 @@ def form_body(cls):
     )
     return cls
 
+
 @form_body
 class Registration(BaseModel):
-    firstname: str
-    lastname: str
+    firstname: constr(to_lower=True)
+    lastname: constr(to_lower=True)
     email: EmailStr
     password: str
-    role: str
+    role: constr(to_lower=True)
 
 
 class RegistrationOut(BaseModel):
@@ -50,8 +51,8 @@ class UserDetails(BaseModel):
 
 class StudentInfo(BaseModel):
     dob: datetime.date
-    course_name: str
-    address: str
+    course_name: constr(to_lower=True)
+    address: constr(to_lower=True)
     contact_no: int
 
 
@@ -77,7 +78,7 @@ class StudentAllDetails(BaseModel):
 
 class AdminInfo(BaseModel):
     dob: datetime.date
-    address: str
+    address: constr(to_lower=True)
     contact_no: int
 
 
@@ -101,9 +102,9 @@ class AdminAllDetails(BaseModel):
 
 
 class TutorInfo(BaseModel):
-    tutor_of: str
+    tutor_of: constr(to_lower=True)
     dob: datetime.date
-    address: str
+    address: constr(to_lower=True)
     contact_no: int
 
 
@@ -145,8 +146,8 @@ class AllTutors(BaseModel):
 
 class RecReq(BaseModel):
     lec_date: datetime.date
-    subject: str
-    req_reason: str
+    subject: constr(to_lower=True)
+    req_reason: constr(to_lower=True)
 
 
 class RecReqOut(BaseModel):
@@ -170,14 +171,14 @@ class ReqDelete(BaseModel):
 
 class ReqAction(BaseModel):
     req_id: int
-    req_status: str
-    comment: Optional[str]
+    req_status: constr(to_lower=True)
+    comment: Optional[constr(to_lower=True)]
 
 
 class DCSReq(BaseModel):
-    subject: str
-    topic: str
-    req_reason: str
+    subject: constr(to_lower=True)
+    topic: constr(to_lower=True)
+    req_reason: constr(to_lower=True)
 
 
 class DCSReqOut(BaseModel):
@@ -205,4 +206,3 @@ class TokenData(BaseModel):
     email: Optional[str] = None
     role: Optional[str] = None
     token: Optional[str] = None
-

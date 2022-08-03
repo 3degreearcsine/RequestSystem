@@ -2,9 +2,10 @@ from typing import Optional
 from fastapi.security.utils import get_authorization_scheme_param
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
-from fastapi import Depends, status, HTTPException, Request
-from fastapi.security import OAuth2PasswordBearer, OAuth2
-from app import schemas
+from fastapi import Depends, status, HTTPException, Request, Response
+
+from fastapi.security import OAuth2
+from app import schemas, main
 from app import utils
 from app.dbase.config import settings
 from fastapi.openapi.models import OAuthFlows as OAuthFlowsModel
@@ -13,14 +14,14 @@ from fastapi.openapi.models import OAuthFlows as OAuthFlowsModel
 class OAuth2PasswordBearerCookie(OAuth2):
     def __init__(
         self,
-        tokenUrl: str,
+        tokenurl: str,
         scheme_name: str = None,
         scopes: dict = None,
         auto_error: bool = True,
     ):
         if not scopes:
             scopes = {}
-        flows = OAuthFlowsModel(password={"tokenUrl": tokenUrl, "scopes": scopes})
+        flows = OAuthFlowsModel(password={"tokenUrl": tokenurl, "scopes": scopes})
         super().__init__(flows=flows, scheme_name=scheme_name, auto_error=auto_error)
 
     async def __call__(self, request: Request) -> Optional[str]:
@@ -53,7 +54,8 @@ class OAuth2PasswordBearerCookie(OAuth2):
         return param
 
 
-oauth2_scheme = OAuth2PasswordBearerCookie(tokenUrl="login")
+oauth2_scheme = OAuth2PasswordBearerCookie(tokenurl="login")
+
 
 def create_access_token(data: dict):
     to_encode = data.copy()
@@ -90,6 +92,7 @@ def verify_access_token(token: str, credentials_exception, token_expired):
             raise credentials_exception
 
     except jwt.ExpiredSignatureError:
+
         raise token_expired
 
     except JWTError:
@@ -102,7 +105,9 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                                           detail=f"Could not validate credentials",
                                           headers={"WWW-Authenticate": "Bearer"})
-    token_expired = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Login Expired", headers={"WWW-Authenticate": "Bearer"})
+    token_expired = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                                  detail="Login Expired",
+                                  headers={"WWW-Authenticate": "Bearer"})
 
     return verify_access_token(token, credentials_exception, token_expired)
 

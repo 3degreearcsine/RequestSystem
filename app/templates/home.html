@@ -73,13 +73,23 @@
             border: none;
             color: white;
         }
-        input[type=text], input[type=password], input[type=email] {
+        input[type=text], input[type=password]{
             width: 100%;
             padding: 12px 20px;
             margin: 8px 0;
             display: inline-block;
             border: 1px solid #ccc;
             box-sizing: border-box;
+        }
+
+        input[type=email] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            text-transform: lowercase;
         }
 
         .imgcontainer {
@@ -107,6 +117,7 @@
         }
 
 
+
     </style>
 </head>
 <body>
@@ -128,7 +139,7 @@
         </div>
         <div class="container">
             <label for="username"><b>Username</b></label>
-            <input type="text" placeholder="Enter Your Email" id="username" name="username" required>
+            <input type="email" placeholder="Enter Your Email" id="username" name="username" required>
             <label for="password"><b>Password</b></label>
             <input type="password" placeholder="Enter Password" id= "password" name="password" required>
             <button class = "button button3" type="submit" >Login</button>
