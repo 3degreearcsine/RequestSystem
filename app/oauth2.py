@@ -69,7 +69,7 @@ def get_user_token(token:str = Depends(oauth2_scheme)):
     return token
 
 
-def verify_access_token(token: str, credentials_exception):
+def verify_access_token(token: str, credentials_exception, token_expired):
     try:
         payload = jwt.decode(token, settings.secret_key, algorithms=settings.algorithm)
         id: str = payload.get("user_id")
@@ -89,8 +89,12 @@ def verify_access_token(token: str, credentials_exception):
         if blacklisted:
             raise credentials_exception
 
+    except jwt.ExpiredSignatureError:
+        raise token_expired
+
     except JWTError:
         raise credentials_exception
+
     return token_data
 
 
@@ -98,6 +102,7 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                                           detail=f"Could not validate credentials",
                                           headers={"WWW-Authenticate": "Bearer"})
+    token_expired = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Login Expired", headers={"WWW-Authenticate": "Bearer"})
 
-    return verify_access_token(token, credentials_exception)
+    return verify_access_token(token, credentials_exception, token_expired)
 
