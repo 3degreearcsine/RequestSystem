@@ -36,9 +36,6 @@ def check_if_token_expired(token: str):
     except jwt.ExpiredSignatureError:
         return True
 
-    # return (payload)
-    # expiry = payload.get("exp")
-    # return datetime.utcnow() + timedelta(minutes=0) > expiry
 
 def check_if_email_exists(email: str):
     chk_email_exists =  Query([models.Users]).filter(models.Users.email == email)
