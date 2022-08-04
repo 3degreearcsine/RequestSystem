@@ -49,4 +49,6 @@ def user_delete_rrf(response: Response, d_req: schemas.ReqDelete, db: Session = 
             del_req.delete(synchronize_session=False)
             db.commit()
             return Response(status_code=status.HTTP_204_NO_CONTENT)
-    raise exceptions.ForbiddenException
+    error = "Access Forbidden"
+    response.status_code = status.HTTP_403_FORBIDDEN
+    return error

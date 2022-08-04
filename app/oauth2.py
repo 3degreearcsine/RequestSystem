@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from fastapi import Depends, status, HTTPException, Request
 
 from fastapi.security import OAuth2
-from app import schemas, main
+from app import schemas, main, exceptions
 from app import utils
 from app.dbase.config import settings
 from fastapi.openapi.models import OAuthFlows as OAuthFlowsModel
@@ -71,7 +71,7 @@ def get_user_token(token:str = Depends(oauth2_scheme)):
     return token
 
 
-def verify_access_token(token: str, credentials_exception, token_expired):
+def verify_access_token(token: str):
     try:
         payload = jwt.decode(token, settings.secret_key, algorithms=settings.algorithm)
         id: str = payload.get("user_id")
@@ -80,36 +80,40 @@ def verify_access_token(token: str, credentials_exception, token_expired):
         exp: int = payload.get("exp")
 
         if id is None:
-            raise credentials_exception
+            raise exceptions.CredentialsException
         if email is None:
-            raise credentials_exception
+            raise exceptions.CredentialsException
         if role is None:
-            raise credentials_exception
+            raise exceptions.CredentialsException
         if exp is None:
-            raise credentials_exception
+            raise exceptions.CredentialsException
 
         token_data = schemas.TokenData(id=id, email=email, role=role)
 
         blacklisted = utils.check_if_blacklisted(token)
         if blacklisted:
-            raise credentials_exception
+            raise exceptions.CredentialsException
 
     except jwt.ExpiredSignatureError:
-        raise token_expired
+        raise exceptions.CredentialsException
 
     except JWTError:
-        raise credentials_exception
+        raise exceptions.CredentialsException
 
     return token_data
 
 
-def get_current_user(token: str = Depends(oauth2_scheme)):
-    credentials_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                          detail=f"Could not validate credentials",
-                                          headers={"WWW-Authenticate": "Bearer"})
-    token_expired = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                  detail="Session Expired",
-                                  headers={"WWW-Authenticate": "Bearer"})
+# def get_current_user(token: str = Depends(oauth2_scheme)):
+#     credentials_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+#                                           detail=f"Could not validate credentials",
+#                                           headers={"WWW-Authenticate": "Bearer"})
+#     token_expired = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+#                                   detail="Session Expired",
+#                                   headers={"WWW-Authenticate": "Bearer"})
+#
+#     return verify_access_token(token, credentials_exception, token_expired)
 
-    return verify_access_token(token, credentials_exception, token_expired)
+def get_current_user(token: str = Depends(oauth2_scheme)):
+    return verify_access_token(token)
+
 

@@ -114,6 +114,30 @@
         <button type="button" onclick="location.href='http://127.0.0.1:8000/'">OK</button>
     </div>
     {% endif %}
+    {% if forbidden %}
+    <div class ="popup" id="forbidden">
+        <img src="/static/images/error.png">
+        <h2>Error</h2>
+       <p>{{forbidden}} </p>
+        <button type="button" onclick="history.back()">OK</button>
+    </div>
+    {% endif %}
+    {% if not_allowed %}
+    <div class ="popup" id="not_allowed">
+        <img src="/static/images/error.png">
+        <h2>Error</h2>
+       <p>{{not_allowed}} </p>
+        <button type="button" onclick="history.back()">OK</button>
+    </div>
+    {% endif %}
+    {% if server_error %}
+    <div class ="popup" id="server_error">
+        <img src="/static/images/error.png">
+        <h2>Error</h2>
+       <p>{{server_error}} </p>
+        <button type="button" onclick="history.back()">OK</button>
+    </div>
+    {% endif %}
     {% if not_logged_out %}
     <div class ="form-popup" id="logout">
         <img src="/static/images/error.png">

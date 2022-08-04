@@ -1,12 +1,12 @@
 import time
-from fastapi import FastAPI, status, Request, Response, HTTPException
+from fastapi import FastAPI, status, Request, HTTPException
 from app.dbase import models
 from app.routes import admin, auth, user, doubt_clearing_request, rec_request, tutor
 from app.dbase.database import engine
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from app import exceptions, oauth2
+from app import exceptions
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -23,11 +23,32 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
 
 
+@app.exception_handler(exceptions.CredentialsException)
+def forbidden_exception_handler(request: Request, exc: exceptions.CredentialsException):
+    exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not validate credentials")
+    return templates.TemplateResponse("popup.html", {"request": request, "error": exception.detail},
+                                      status_code=exception.status_code, headers={"WWW-Authenticate": "Bearer"})
+
+
 @app.exception_handler(exceptions.ForbiddenException)
-def forbidden_exception_handler():
-    error = "Access Forbidden"
-    Response.status_code = status.HTTP_403_FORBIDDEN
-    return error
+def forbidden_exception_handler(request: Request, exc: exceptions.ForbiddenException):
+    forbidden_exception = HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access Forbidden")
+    return templates.TemplateResponse("popup.html", {"request": request, "forbidden": forbidden_exception.detail},
+                                      status_code=forbidden_exception.status_code)
+
+
+@app.exception_handler(status.HTTP_405_METHOD_NOT_ALLOWED)
+def forbidden_exception_handler(request: Request, exc: status.HTTP_405_METHOD_NOT_ALLOWED):
+    not_allowed_exception = HTTPException(status_code=status.HTTP_405_METHOD_NOT_ALLOWED, detail="Method Not Allowed")
+    return templates.TemplateResponse("popup.html", {"request": request, "not_allowed": not_allowed_exception.detail},
+                                      status_code=not_allowed_exception.status_code)
+
+
+@app.exception_handler(status.HTTP_500_INTERNAL_SERVER_ERROR)
+def forbidden_exception_handler(request: Request, exc: status.HTTP_500_INTERNAL_SERVER_ERROR):
+    server_error = HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal Server Error")
+    return templates.TemplateResponse("popup.html", {"request": request, "server_error": server_error.detail},
+                                      status_code=server_error.status_code)
 
 
 @app.middleware("http")
@@ -39,6 +60,6 @@ async def add_process_time_header(request: Request, call_next):
     return response
 
 
-@app.get("/",status_code=status.HTTP_200_OK, response_class=HTMLResponse)
+@app.get("/", status_code=status.HTTP_200_OK, response_class=HTMLResponse)
 def home(request: Request):
     return templates.TemplateResponse("home.html", {"request": request})

@@ -59,7 +59,9 @@ def admin_action_rrf(response: Response, a_req: schemas.ReqAction, db: Session =
         act_req.update(a_req.dict(), synchronize_session=False)
         db.commit()
         return Response(status_code=status.HTTP_204_NO_CONTENT)
-    raise exceptions.ForbiddenException
+    error = "Access Forbidden"
+    response.status_code = status.HTTP_403_FORBIDDEN
+    return error
 
 
 @router.put("/admin_profile/requests/all_pending_dcsf/action_dcsf")
@@ -73,7 +75,9 @@ def admin_action_dcsf(response: Response, a_req: schemas.ReqAction, db: Session 
         act_req.update(a_req.dict(), synchronize_session=False)
         db.commit()
         return Response(status_code=status.HTTP_204_NO_CONTENT)
-    raise exceptions.ForbiddenException
+    error = "Access Forbidden"
+    response.status_code = status.HTTP_403_FORBIDDEN
+    return error
 
 
 

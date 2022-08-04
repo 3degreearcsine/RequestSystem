@@ -39,9 +39,9 @@ def user_dcsrf_history(response: Response, db: Session = Depends(get_db),
 @router.delete("/student_profile/dcsr/delete_dcsf")
 def user_delete_dcsf(response: Response, d_req: schemas.ReqDelete, db: Session = Depends(get_db),
                      current_user: int = Depends(oauth2.get_current_user)):
-    del_req = db.query(models.SessionRequest).filter(models.SessionRequest.stu_email == current_user.email,models.SessionRequest.req_id == d_req.req_id)
-    result_del = del_req.first()
     if current_user.role == 'student':
+        del_req = db.query(models.SessionRequest).filter(models.SessionRequest.stu_email == current_user.email,models.SessionRequest.req_id == d_req.req_id)
+        result_del = del_req.first()
         if result_del == None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                                 detail=f"Request with id: {d_req.req_id} does not exist")
@@ -49,6 +49,8 @@ def user_delete_dcsf(response: Response, d_req: schemas.ReqDelete, db: Session =
             del_req.delete(synchronize_session=False)
             db.commit()
             return Response(status_code=status.HTTP_204_NO_CONTENT)
-    raise exceptions.ForbiddenException
+    error = "Access Forbidden"
+    response.status_code = status.HTTP_403_FORBIDDEN
+    return error
 
 

@@ -30,4 +30,6 @@ def tutor_action_dcsf(response: Response, t_req: schemas.ReqAction, db: Session 
             db.commit()
             return Response(status_code=status.HTTP_204_NO_CONTENT)
         return Response(status_code=status.HTTP_400_BAD_REQUEST, content=f"Invalid Input {t_req.req_status}")
-    raise exceptions.ForbiddenException
+    error = "Access Forbidden"
+    response.status_code = status.HTTP_403_FORBIDDEN
+    return error

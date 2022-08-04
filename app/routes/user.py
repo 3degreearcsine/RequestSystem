@@ -79,10 +79,11 @@ def add_admin_info(response: Response, admin: schemas.AdminInfo, db: Session = D
         detail = "Profile Information Added"
         response.status_code = status.HTTP_201_CREATED
         return detail
-    raise exceptions.ForbiddenException
+    error = "Access Forbidden"
+    response.status_code = status.HTTP_403_FORBIDDEN
+    return error
 
 
-# @router.get("/admin_profile", response_model=Union[schemas.AdminAllDetails, exceptions.ForbiddenException])
 @router.get("/admin_profile", response_model=schemas.AdminAllDetails)
 def admin_profile(response: Response, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'admin':
