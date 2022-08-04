@@ -59,7 +59,7 @@ class Tutor(Base):
     contact_no = Column(contact_int(10), unique=True, nullable=False)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     last_updated = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now() ON UPDATE now()'))
-    __table_args__ = (CheckConstraint(tutor_of.in_(['Python', 'Java'])), CheckConstraint('contact_no>=1000000000'),
+    __table_args__ = (CheckConstraint(tutor_of.in_(['python', 'java'])), CheckConstraint('contact_no>=1000000000'),
                       CheckConstraint('contact_no<=9999999999'))
 
 

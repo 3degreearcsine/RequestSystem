@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Complete Profile</title>
+    <link id="favicon" rel="icon" type="image/x-icon" href="/static/images/favicon.ico">
+    <style>
+
+    h2{
+        font-size: 38px;
+        font-weight: 500;
+        margin: 30px 0 10px;
+        text-align: center;
+    }
+    .student_profile_form{
+        background-color: #fefefe;
+        margin: 5px auto;
+        border: 1px solid #888;
+        width: 100%;
+        height: fit-content;
+
+        }
+    .admin_profile_form{
+        background-color: #fefefe;
+        margin: 5px auto;
+        border: 1px solid #888;
+        width: 100%;
+        height: fit-content;
+    }
+    .tutor_profile_form{
+        background-color: #fefefe;
+        margin: 5px auto;
+        border: 1px solid #888;
+        width: 100%;
+        height: fit-content;
+    }
+
+    .imgcontainer {
+        text-align: center;
+        margin: 4px 0 2px 0;
+        position: relative;
+
+    }
+    img.registrationavtar {
+        border-radius: 20%;
+        height: 100px;
+        width: 100px;
+
+    }
+    .button{
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+    }
+    button:hover {
+        opacity: 0.8;
+    }
+    .button1{background-color: #4CAf50;
+    width: 100%;
+    }
+
+    .logoutbtn {
+        width: auto;
+        padding: 10px 18px;
+        background-color: #f44336;
+        border: none;
+        color: white;
+        position: relative;
+        margin:auto;
+
+    }
+    input[type=text], input[type=date], input[type=number]{
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+    }
+    .container {
+        padding: 16px;
+
+    }
+    select {
+        width: 100%;
+        padding: 12px 20px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+    }
+
+    </style>
+</head>
+<body>
+{% if student %}
+<div class="container" style="background-color:#f1f1f1">
+    <form class= "student_profile_form" action="/complete_student_profile" method="post">
+        <h2>Please complete your profile</h2>
+        <div class="imgcontainer">
+            <img src="/static/images/registrationicon.png" class="registrationavtar">
+        </div>
+        <div class="container">
+            <label for="dob"><b>Address</b></label>
+            <input type="date" id="dob" name="dob" required>
+            <label for="course_name"><b>Course Name</b></label>
+            <select id= "course_name" name="course_name" required>
+                <option value="">None</option>
+                <option value="java">Java</option>
+                <option value="python">Python</option>
+            </select>
+            <label for="address"><b>Address</b></label>
+            <input type="text" placeholder="Enter Your Address" id="address" name="address" required>
+            <label for="contact_no"><b>Contact Number</b></label>
+            <input type="number" placeholder="Enter Your Mobile Number" id="contact_no" name="contact_no" required>
+
+            <button class = "button button1" type="submit" >Submit</button>
+        </div>
+    </form>
+    <form class="logout" action="/logout" method="post">
+        <button type="submit" onclick="location.href='http://127.0.0.1:8000/logout'" class="logoutbtn">Logout
+        </button>
+    </form>
+</div>
+{% endif %}
+{% if admin %}
+<div class="container" style="background-color:#f1f1f1">
+    <form class= "admin_profile_form" action="/complete_admin_profile" method="post">
+        <h2>Please complete your profile</h2>
+        <div class="imgcontainer">
+            <img src="/static/images/registrationicon.png" class="registrationavtar">
+        </div>
+        <div class="container">
+            <label for="dob_admin"><b>Address</b></label>
+            <input type="text" id="dob_admin" name="dob" required>
+            <label for="address_admin"><b>Address</b></label>
+            <input type="text" placeholder="Enter Your Address" id="address_admin" name="address" required>
+            <label for="contact_no_admin"><b>Contact Number</b></label>
+            <input type="number" placeholder="Enter Your Mobile Number" id="contact_no_admin" name="contact_no" required>
+            <button class = "button button1" type="submit" >Submit</button>
+        </div>
+    </form>
+    <form class="logout" action="/logout" method="post">
+        <button type="submit" onclick="location.href='http://127.0.0.1:8000/logout'" class="logoutbtn">Logout
+        </button>
+    </form>
+</div>
+
+{% endif %}
+{% if tutor %}
+<div class="container" style="background-color:#f1f1f1">
+    <form class= "tutor_profile_form" action="/complete_tutor_profile" method="post">
+        <h2>Please complete your profile</h2>
+        <div class="imgcontainer">
+            <img src="/static/images/registrationicon.png" class="registrationavtar">
+        </div>
+        <div class="container">
+            <label for="tutor_of"><b>Course Name</b></label>
+            <select id= "tutor_of" name="tutor_of" required>
+                <option value="">None</option>
+                <option value="admin">Java</option>
+                <option value="student">Python</option>
+            </select>
+            <label for="dob_tutor"><b>Address</b></label>
+            <input type="date" id="dob_tutor" name="dob" value="YYYY-MM-DD" required>
+            <label for="address_tutor"><b>Address</b></label>
+            <input type="text" placeholder="Enter Your Address" id="address_tutor" name="address" required>
+            <label for="contact_no_tutor"><b>Contact Number</b></label>
+            <input type="number" placeholder="Enter Your Mobile Number" id="contact_no_tutor" name="contact_no" required>
+            <button class = "button button1" type="submit" >Submit</button>
+        </div>
+    </form>
+    <form class="logout" action="/logout" method="post">
+        <button type="submit" onclick="location.href='http://127.0.0.1:8000/logout'" class="logoutbtn">Logout
+        </button>
+    </form>
+</div>
+
+{% endif %}
+</body>
+</html>

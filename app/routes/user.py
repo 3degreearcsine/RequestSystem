@@ -1,16 +1,14 @@
-
-from pydantic import ValidationError
-from pydantic.class_validators import Union
 from sqlalchemy.orm import Session
 from app import schemas, oauth2, utils
 from app.dbase import models
 from fastapi import Depends, status, APIRouter, Response, HTTPException, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from app.dbase.database import get_db, session
-from app import main, exceptions
+from app import main
 
 
 router = APIRouter(tags=['User Profile'])
+
 
 @router.post("/register", status_code=status.HTTP_201_CREATED, response_class=HTMLResponse)
 def create_user(request: Request, user: schemas.Registration = Depends(), db: Session = Depends(get_db)):
@@ -25,8 +23,12 @@ def create_user(request: Request, user: schemas.Registration = Depends(), db: Se
     if user.role == 'admin':
         admin_exist = utils.check_if_admin_exist(user.role)
         if admin_exist:
-            invalid_user_exception = HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Admin user already exists")
-            return main.templates.TemplateResponse('registration.html', context={'request': request, 'error': invalid_user_exception.detail}, status_code=invalid_user_exception.status_code)
+            invalid_user_exception = HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                                                   detail="Admin user already exists")
+            return main.templates.TemplateResponse('registration.html',
+                                                   context={'request': request,
+                                                            'error': invalid_user_exception.detail},
+                                                   status_code=invalid_user_exception.status_code)
 
     hashed_password = utils.hash(user.password)
     user.password = hashed_password
@@ -38,6 +40,19 @@ def create_user(request: Request, user: schemas.Registration = Depends(), db: Se
     session.remove()
     data = "Registration Successful."
     return main.templates.TemplateResponse('registration.html', context={'request': request, 'data': data})
+
+
+@router.get("/fill_profile_info")
+def fill_profile_info(request: Request, current_user: int = Depends(oauth2.get_current_user)):
+    if current_user.role == 'admin':
+        return main.templates.TemplateResponse('profile_info.html', context={'request': request, 'admin': 'admin'},
+                                               status_code=status.HTTP_200_OK)
+    if current_user.role == 'student':
+        return main.templates.TemplateResponse('profile_info.html', context={'request': request, 'student': 'student'},
+                                               status_code=status.HTTP_200_OK)
+    if current_user.role == 'tutor':
+        return main.templates.TemplateResponse('profile_info.html', context={'request': request, 'tutor': 'tutor'},
+                                               status_code=status.HTTP_200_OK)
 
 
 @router.post("/complete_student_profile")
@@ -57,10 +72,14 @@ def add_student_info(response: Response, student: schemas.StudentInfo, db: Sessi
 
 
 @router.get("/student_profile", response_model=schemas.StudentAllDetails)
-def student_profile(response: Response, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+def student_profile(response: Response, db: Session = Depends(get_db),
+                    current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'student':
+        if not utils.check_if_profile_complete(current_user.id, current_user.role):
+            return RedirectResponse("http://127.0.0.1:8000/fill_profile_info")
         # Left outer join
-        s_updated_profile = db.query(models.Users, models.Student).join(models.Student, models.Student.user_id == models.Users.id,
+        s_updated_profile = db.query(models.Users, models.Student).join(models.Student,
+                                                                        models.Student.user_id == models.Users.id,
                                                                         isouter=True).filter(models.Student.user_id == current_user.id).first()
         return s_updated_profile
     error = "Access Forbidden"
@@ -85,8 +104,11 @@ def add_admin_info(response: Response, admin: schemas.AdminInfo, db: Session = D
 
 
 @router.get("/admin_profile", response_model=schemas.AdminAllDetails)
-def admin_profile(response: Response, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+def admin_profile(response: Response, db: Session = Depends(get_db),
+                  current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'admin':
+        if not utils.check_if_profile_complete(current_user.id, current_user.role):
+            return RedirectResponse("http://127.0.0.1:8000/fill_profile_info")
         # Left outer join
         a_updated_profile = db.query(models.Users, models.Admin).join(models.Admin, models.Admin.user_id == models.Users.id,
                                                                       isouter=True).filter(models.Admin.user_id == current_user.id).first()
@@ -115,6 +137,8 @@ def add_tutor_info(response: Response, tutor: schemas.TutorInfo, db: Session = D
 @router.get("/tutor_profile", response_model=schemas.TutorAllDetails)
 def tutor_profile(response: Response, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'tutor':
+        if not utils.check_if_profile_complete(current_user.id, current_user.role):
+            return RedirectResponse("http://127.0.0.1:8000/fill_profile_info")
         # Left outer join
         t_updated_profile = db.query(models.Users, models.Tutor).join(models.Tutor, models.Tutor.user_id == models.Users.id,
                                                                       isouter=True).filter(models.Tutor.user_id == current_user.id).first()

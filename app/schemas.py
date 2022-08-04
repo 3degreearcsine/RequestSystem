@@ -1,7 +1,7 @@
-import datetime
-from pydantic import BaseModel, EmailStr, constr
+from pydantic import BaseModel, EmailStr, constr, validator
 from typing import Optional
 from fastapi import Form
+from datetime import datetime, date
 
 
 def form_body(cls):
@@ -50,7 +50,7 @@ class UserDetails(BaseModel):
 
 
 class StudentInfo(BaseModel):
-    dob: datetime.date
+    dob: date
     course_name: constr(to_lower=True)
     address: constr(to_lower=True)
     contact_no: int
@@ -59,7 +59,7 @@ class StudentInfo(BaseModel):
 class StudentDetails(BaseModel):
     stu_id: int
     user_id: int
-    dob: datetime.date
+    dob: date
     course_name: str
     address: str
     contact_no: int
@@ -77,7 +77,7 @@ class StudentAllDetails(BaseModel):
 
 
 class AdminInfo(BaseModel):
-    dob: datetime.date
+    dob: date
     address: constr(to_lower=True)
     contact_no: int
 
@@ -85,7 +85,7 @@ class AdminInfo(BaseModel):
 class AdminDetails(BaseModel):
     admin_id: int
     user_id: int
-    dob: datetime.date
+    dob: date
     address: str
     contact_no: int
 
@@ -101,18 +101,25 @@ class AdminAllDetails(BaseModel):
         orm_mode = True
 
 
+@form_body
 class TutorInfo(BaseModel):
     tutor_of: constr(to_lower=True)
-    dob: datetime.date
+    dob: date
     address: constr(to_lower=True)
     contact_no: int
 
+    @validator("dob", pre=True)
+    def parse_birthdate(cls, value):
+        return datetime.strptime(
+            value,
+            "%d-%m-%Y"
+        ).date()
 
 class TutorDetails(BaseModel):
     tutor_id: int
     user_id: int
     tutor_of: str
-    dob: datetime.date
+    dob: date
     address: str
     contact_no: int
 
@@ -145,7 +152,7 @@ class AllTutors(BaseModel):
 
 
 class RecReq(BaseModel):
-    lec_date: datetime.date
+    lec_date: date
     subject: constr(to_lower=True)
     req_reason: constr(to_lower=True)
 
@@ -153,13 +160,13 @@ class RecReq(BaseModel):
 class RecReqOut(BaseModel):
     req_id: int
     stu_email: str
-    lec_date: datetime.date
+    lec_date: date
     subject: str
     req_reason: str
     req_status: str
     comment: Optional[str]
-    created_at: datetime.datetime
-    last_updated: datetime.datetime
+    created_at: date
+    last_updated: date
 
     class Config:
         orm_mode = True
@@ -189,8 +196,8 @@ class DCSReqOut(BaseModel):
     req_reason: str
     req_status: str
     comment: Optional[str]
-    created_at: datetime.datetime
-    last_updated: datetime.datetime
+    created_at: date
+    last_updated: date
 
     class Config:
         orm_mode = True
