@@ -2,7 +2,7 @@ from typing import Optional
 from fastapi.security.utils import get_authorization_scheme_param
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
-from fastapi import Depends, status, HTTPException, Request, Response
+from fastapi import Depends, status, HTTPException, Request
 
 from fastapi.security import OAuth2
 from app import schemas, main
@@ -48,7 +48,7 @@ class OAuth2PasswordBearerCookie(OAuth2):
 
         if not authorization or scheme.lower() != "bearer":
             if self.auto_error:
-                raise HTTPException(status_code= status.HTTP_403_FORBIDDEN, detail="Not authenticated")
+                raise HTTPException(status_code= status.HTTP_403_FORBIDDEN, detail="Not Authenticated")
             else:
                 return None
         return param
@@ -77,12 +77,15 @@ def verify_access_token(token: str, credentials_exception, token_expired):
         id: str = payload.get("user_id")
         email: str = payload.get("user_email")
         role: str = payload.get("user_role")
+        exp: int = payload.get("exp")
 
         if id is None:
             raise credentials_exception
         if email is None:
             raise credentials_exception
         if role is None:
+            raise credentials_exception
+        if exp is None:
             raise credentials_exception
 
         token_data = schemas.TokenData(id=id, email=email, role=role)
@@ -105,7 +108,7 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
                                           detail=f"Could not validate credentials",
                                           headers={"WWW-Authenticate": "Bearer"})
     token_expired = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                  detail="Login Expired",
+                                  detail="Session Expired",
                                   headers={"WWW-Authenticate": "Bearer"})
 
     return verify_access_token(token, credentials_exception, token_expired)

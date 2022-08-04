@@ -25,6 +25,7 @@ def login(request: Request, user_credentials: OAuth2PasswordRequestForm = Depend
     if not utils.verfiy(user_credentials.password, user.password):
         invalid_password_exception = HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=f"Invalid Credentials")
         return main.templates.TemplateResponse('popup.html', context={'request': request, 'error': invalid_password_exception.detail}, status_code=invalid_password_exception.status_code)
+
     access_token = oauth2.create_access_token(data={"user_id": user.id, "user_email": user.email.lower(), "user_role": user.role.lower()})
 
     if user.role =='student':
