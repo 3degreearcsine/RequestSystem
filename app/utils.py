@@ -54,6 +54,8 @@ def check_if_email_exists(email: str):
     chk_email_exists_result = chk_email_exists.with_session(database.session).first()
     return chk_email_exists_result
 
+
+
 def check_course(id: int, subject: str):
     chk_course = Query([models.Student]).filter(models.Student.user_id == id).filter(models.Student.course_name
                                                                                      == subject)

@@ -94,6 +94,15 @@ def verify_access_token(token: str):
         if blacklisted:
             raise exceptions.CredentialsException
 
+        email_exists = utils.check_if_email_exists(email)
+        if not email_exists:
+            raise exceptions.CredentialsException
+
+        if not email_exists.id == id:
+            raise exceptions.CredentialsException
+        if not email_exists.role == role:
+            raise exceptions.CredentialsException
+
     except jwt.ExpiredSignatureError:
         raise exceptions.CredentialsException
 
@@ -102,16 +111,6 @@ def verify_access_token(token: str):
 
     return token_data
 
-
-# def get_current_user(token: str = Depends(oauth2_scheme)):
-#     credentials_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-#                                           detail=f"Could not validate credentials",
-#                                           headers={"WWW-Authenticate": "Bearer"})
-#     token_expired = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-#                                   detail="Session Expired",
-#                                   headers={"WWW-Authenticate": "Bearer"})
-#
-#     return verify_access_token(token, credentials_exception, token_expired)
 
 def get_current_user(token: str = Depends(oauth2_scheme)):
     return verify_access_token(token)
