@@ -42,7 +42,7 @@ def create_user(request: Request, user: schemas.Registration = Depends(), db: Se
     return main.templates.TemplateResponse('registration.html', context={'request': request, 'data': data})
 
 
-@router.get("/fill_profile_info")
+@router.get("/fill_profile_info", response_class=HTMLResponse)
 def fill_profile_info(request: Request, current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'admin':
         return main.templates.TemplateResponse('profile_info.html', context={'request': request, 'admin': 'admin'},
@@ -55,9 +55,10 @@ def fill_profile_info(request: Request, current_user: int = Depends(oauth2.get_c
                                                status_code=status.HTTP_200_OK)
 
 
-@router.post("/complete_student_profile")
-def add_student_info(response: Response, student: schemas.StudentInfo, db: Session = Depends(get_db),
+@router.post("/complete_student_profile", status_code=status.HTTP_201_CREATED)
+def add_student_info(response: Response, student: schemas.StudentInfo = Depends(), db: Session = Depends(get_db),
                      current_user: int = Depends(oauth2.get_current_user)):
+    print(student.dict())
     if current_user.role == 'student':
         new_student = models.Student(user_id=current_user.id, **student.dict())
         db.add(new_student)
@@ -88,7 +89,7 @@ def student_profile(response: Response, db: Session = Depends(get_db),
 
 
 @router.post("/complete_admin_profile")
-def add_admin_info(response: Response, admin: schemas.AdminInfo, db: Session = Depends(get_db),
+def add_admin_info(response: Response, admin: schemas.AdminInfo = Depends(), db: Session = Depends(get_db),
                    current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'admin':
         new_admin = models.Admin(user_id=current_user.id, **admin.dict())
@@ -119,7 +120,7 @@ def admin_profile(response: Response, db: Session = Depends(get_db),
 
 
 @router.post("/complete_tutor_profile")
-def add_tutor_info(response: Response, tutor: schemas.TutorInfo, db: Session = Depends(get_db),
+def add_tutor_info(response: Response, tutor: schemas.TutorInfo = Depends(), db: Session = Depends(get_db),
                    current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'tutor':
         new_tutor = models.Tutor(user_id=current_user.id, **tutor.dict())

@@ -49,6 +49,7 @@ class UserDetails(BaseModel):
         orm_mode = True
 
 
+@form_body
 class StudentInfo(BaseModel):
     dob: date
     course_name: constr(to_lower=True)
@@ -108,12 +109,12 @@ class TutorInfo(BaseModel):
     address: constr(to_lower=True)
     contact_no: int
 
-    @validator("dob", pre=True)
-    def parse_birthdate(cls, value):
-        return datetime.strptime(
-            value,
-            "%d-%m-%Y"
-        ).date()
+    # @validator("dob", pre=True)
+    # def parse_birthdate(cls, value):
+    #     return datetime.strptime(
+    #         value,
+    #         "%d-%m-%Y"
+    #     ).date()
 
 class TutorDetails(BaseModel):
     tutor_id: int
