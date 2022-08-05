@@ -100,8 +100,6 @@
             margin-top: 30px;
         }
 
-
-
     </style>
 </head>
 <body>
@@ -162,6 +160,27 @@
         <img src="/static/images/tickmark.png">
         <p>{{detail}}</p>
         <button type="button" onclick="location.href='http://127.0.0.1:8000/'">OK</button>
+    </div>
+    {% endif %}
+    {% if stu_update_detail %}
+    <div class ="popup" id="stu_update_detail">
+        <img src="/static/images/tickmark.png">
+        <p>{{stu_update_detail}}</p>
+        <button type="button" onclick="location.href='http://127.0.0.1:8000/student_profile'">OK</button>
+    </div>
+    {% endif %}
+    {% if adm_update_detail %}
+    <div class ="popup" id="adm_update_detail">
+        <img src="/static/images/tickmark.png">
+        <p>{{adm_update_detail}}</p>
+        <button type="button" onclick="location.href='http://127.0.0.1:8000/admin_profile'">OK</button>
+    </div>
+    {% endif %}
+    {% if tut_update_detail %}
+    <div class ="popup" id="tut_update_detail">
+        <img src="/static/images/tickmark.png">
+        <p>{{tut_update_detail}}</p>
+        <button type="button" onclick="location.href='http://127.0.0.1:8000/tutor_profile'">OK</button>
     </div>
     {% endif %}
 </div>

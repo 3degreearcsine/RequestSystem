@@ -56,17 +56,18 @@ def fill_profile_info(request: Request, current_user: int = Depends(oauth2.get_c
 
 
 @router.post("/complete_student_profile", status_code=status.HTTP_201_CREATED)
-def add_student_info(response: Response, student: schemas.StudentInfo = Depends(), db: Session = Depends(get_db),
+def add_student_info(request: Request, response: Response, student: schemas.StudentInfo = Depends(), db: Session = Depends(get_db),
                      current_user: int = Depends(oauth2.get_current_user)):
-    print(student.dict())
     if current_user.role == 'student':
         new_student = models.Student(user_id=current_user.id, **student.dict())
         db.add(new_student)
         db.commit()
         db.refresh(new_student)
-        detail = "Profile Information Added"
-        response.status_code = status.HTTP_201_CREATED
-        return detail
+        session.remove()
+        stu_update_detail = "Profile Information Added"
+        return main.templates.TemplateResponse('popup.html', context={'request': request,
+                                                                      'stu_update_detail': stu_update_detail },
+                                               status_code=status.HTTP_201_CREATED)
     error = "Access Forbidden"
     response.status_code = status.HTTP_403_FORBIDDEN
     return error
@@ -75,6 +76,7 @@ def add_student_info(response: Response, student: schemas.StudentInfo = Depends(
 @router.get("/student_profile", response_model=schemas.StudentAllDetails)
 def student_profile(response: Response, db: Session = Depends(get_db),
                     current_user: int = Depends(oauth2.get_current_user)):
+
     if current_user.role == 'student':
         if not utils.check_if_profile_complete(current_user.id, current_user.role):
             return RedirectResponse("http://127.0.0.1:8000/fill_profile_info")
@@ -89,16 +91,18 @@ def student_profile(response: Response, db: Session = Depends(get_db),
 
 
 @router.post("/complete_admin_profile")
-def add_admin_info(response: Response, admin: schemas.AdminInfo = Depends(), db: Session = Depends(get_db),
+def add_admin_info(request: Request, response: Response, admin: schemas.AdminInfo = Depends(), db: Session = Depends(get_db),
                    current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'admin':
         new_admin = models.Admin(user_id=current_user.id, **admin.dict())
         db.add(new_admin)
         db.commit()
         db.refresh(new_admin)
-        detail = "Profile Information Added"
-        response.status_code = status.HTTP_201_CREATED
-        return detail
+        session.remove()
+        adm_update_detail = "Profile Information Added"
+        return main.templates.TemplateResponse('popup.html', context={'request': request,
+                                                                      'adm_update_detail': adm_update_detail},
+                                               status_code=status.HTTP_201_CREATED)
     error = "Access Forbidden"
     response.status_code = status.HTTP_403_FORBIDDEN
     return error
@@ -120,16 +124,18 @@ def admin_profile(response: Response, db: Session = Depends(get_db),
 
 
 @router.post("/complete_tutor_profile")
-def add_tutor_info(response: Response, tutor: schemas.TutorInfo = Depends(), db: Session = Depends(get_db),
+def add_tutor_info(request: Request, response: Response, tutor: schemas.TutorInfo = Depends(), db: Session = Depends(get_db),
                    current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'tutor':
         new_tutor = models.Tutor(user_id=current_user.id, **tutor.dict())
         db.add(new_tutor)
         db.commit()
         db.refresh(new_tutor)
-        detail = "Profile Information Added"
-        response.status_code = status.HTTP_201_CREATED
-        return detail
+        session.remove()
+        tut_update_detail = "Profile Information Added"
+        return main.templates.TemplateResponse('popup.html', context={'request': request,
+                                                                      'tut_update_detail': tut_update_detail},
+                                               status_code=status.HTTP_201_CREATED)
     error = "Access Forbidden"
     response.status_code = status.HTTP_403_FORBIDDEN
     return error
