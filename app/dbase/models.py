@@ -18,7 +18,7 @@ class Users(Base):
     role = Column(VARCHAR(30), primary_key=False, nullable=False)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     last_updated = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now() ON UPDATE now()'))
-    __table_args__ = (CheckConstraint(role.in_(['Student', 'Admin', 'Tutor'])),)
+    __table_args__ = (CheckConstraint(role.in_(['student', 'admin', 'tutor'])),)
 
 
 contact_int = mysql.BIGINT
@@ -33,7 +33,7 @@ class Student(Base):
     contact_no = Column(contact_int(10), nullable=False, unique=True)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     last_updated = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now() ON UPDATE now()'))
-    __table_args__ = (CheckConstraint(course_name.in_(['Python', 'Java'])), CheckConstraint('contact_no>=1000000000'),
+    __table_args__ = (CheckConstraint(course_name.in_(['python', 'java'])), CheckConstraint('contact_no>=1000000000'),
                       CheckConstraint('contact_no<=9999999999'))
 
 
@@ -70,12 +70,12 @@ class RecRequest(Base):
     lec_date = Column(DateTime, nullable=False)
     subject = Column(VARCHAR(20), nullable=False)
     req_reason = Column(VARCHAR(100), nullable=False)
-    req_status = Column(VARCHAR(30), server_default="Pending", nullable=False)
+    req_status = Column(VARCHAR(30), server_default="pending", nullable=False)
     comment = Column(VARCHAR(100), nullable=True)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     last_updated = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now() ON UPDATE now()'))
-    __table_args__ = (CheckConstraint(req_status.in_(['Pending', 'Approved', 'Rejected'])),
-                      CheckConstraint(subject.in_(['Python', 'Java'])))
+    __table_args__ = (CheckConstraint(req_status.in_(['pending', 'approved', 'rejected'])),
+                      CheckConstraint(subject.in_(['python', 'java'])))
 
 
 class SessionRequest(Base):
@@ -85,12 +85,12 @@ class SessionRequest(Base):
     subject = Column(VARCHAR(20), nullable=False)
     topic = Column(VARCHAR(70), nullable=False)
     req_reason = Column(VARCHAR(100), nullable=False)
-    req_status = Column(VARCHAR(30), server_default="Pending", nullable=False)
+    req_status = Column(VARCHAR(30), server_default="pending", nullable=False)
     comment = Column(VARCHAR(100), nullable=True)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     last_updated = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now() ON UPDATE now()'))
-    __table_args__ = (CheckConstraint(req_status.in_(['Pending', 'Accepted', 'Rejected', 'Forwarded'])),
-                      CheckConstraint(subject.in_(['Python', 'Java'])))
+    __table_args__ = (CheckConstraint(req_status.in_(['pending', 'accepted', 'rejected', 'forwarded'])),
+                      CheckConstraint(subject.in_(['python', 'java'])))
 
 
 class BlackListedTokens(Base):

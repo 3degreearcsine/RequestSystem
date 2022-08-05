@@ -122,6 +122,14 @@
         <button type="button" onclick="history.back()">OK</button>
     </div>
     {% endif %}
+    {% if not_authenticated %}
+    <div class ="popup" id="not_authenticated">
+        <img src="/static/images/error.png">
+        <h2>Error</h2>
+       <p>{{not_authenticated}} </p>
+        <button type="button" onclick="location.href='http://127.0.0.1:8000/'">OK</button>
+    </div>
+    {% endif %}
     {% if not_allowed %}
     <div class ="popup" id="not_allowed">
         <img src="/static/images/error.png">

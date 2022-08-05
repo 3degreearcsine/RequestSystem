@@ -11,7 +11,7 @@ router = APIRouter(tags=['Administration'])
 @router.get("/admin_profile/all_students", response_model=List[schemas.AllStudents])
 # @router.get("/admin_profile/all_students")
 def all_students(response: Response, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
-    if current_user.role == 'Admin':
+    if current_user.role == 'admin':
         stu_profiles = db.query(models.Users, models.Student).join(models.Student, models.Student.user_id == models.Users.id,
                                                                    isouter=False).all()
         return stu_profiles
@@ -22,7 +22,7 @@ def all_students(response: Response, db: Session = Depends(get_db), current_user
 
 @router.get("/admin_profile/all_tutors", response_model=List[schemas.AllTutors])
 def all_tutors(response: Response, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
-    if current_user.role == 'Admin':
+    if current_user.role == 'admin':
         tut_profiles = db.query(models.Users, models.Tutor).join(models.Tutor, models.Tutor.user_id == models.Users.id,
                                                                  isouter=False).all()
         return tut_profiles
@@ -33,17 +33,17 @@ def all_tutors(response: Response, db: Session = Depends(get_db), current_user: 
 
 @router.get("/admin_profile/requests/all_pending_rrf")
 def all_pending_requests(response: Response, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
-    if current_user.role == 'Admin':
-        rrf_act_pending = db.query(models.SessionRequest).filter(models.SessionRequest.req_status == 'Pending').all()
+    if current_user.role == 'admin':
+        rrf_act_pending = db.query(models.SessionRequest).filter(models.SessionRequest.req_status == 'pending').all()
         return rrf_act_pending
     raise exceptions.ForbiddenException
 
 
 @router.get("/admin_profile/requests/all_pending_dcsf")
 def all_pending_requests(response: Response, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
-    if current_user.role == 'Admin':
-        dcsf_act_pending = db.query(models.SessionRequest).filter(or_(models.SessionRequest.req_status == 'Pending',
-                                                                      models.SessionRequest.req_status == 'Forwarded')).all()
+    if current_user.role == 'admin':
+        dcsf_act_pending = db.query(models.SessionRequest).filter(or_(models.SessionRequest.req_status == 'pending',
+                                                                      models.SessionRequest.req_status == 'forwarded')).all()
         return dcsf_act_pending
     raise exceptions.ForbiddenException
 
@@ -51,7 +51,7 @@ def all_pending_requests(response: Response, db: Session = Depends(get_db), curr
 @router.put("/admin_profile/requests/all_pending_rrf/action_rrf")
 def admin_action_rrf(response: Response, a_req: schemas.ReqAction, db: Session = Depends(get_db),
                      current_user: int = Depends(oauth2.get_current_user)):
-    if current_user.role == 'Admin':
+    if current_user.role == 'admin':
         act_req = db.query(models.RecRequest).filter(models.RecRequest.req_id == a_req.req_id)
         if act_req.first() == None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
@@ -67,7 +67,7 @@ def admin_action_rrf(response: Response, a_req: schemas.ReqAction, db: Session =
 @router.put("/admin_profile/requests/all_pending_dcsf/action_dcsf")
 def admin_action_dcsf(response: Response, a_req: schemas.ReqAction, db: Session = Depends(get_db),
                       current_user: int = Depends(oauth2.get_current_user)):
-    if current_user.role == 'Admin':
+    if current_user.role == 'admin':
         act_req = db.query(models.SessionRequest).filter(models.SessionRequest.req_id == a_req.req_id)
         if act_req.first() == None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,

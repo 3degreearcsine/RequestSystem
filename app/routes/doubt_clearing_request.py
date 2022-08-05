@@ -45,7 +45,7 @@ def user_delete_dcsf(response: Response, d_req: schemas.ReqDelete, db: Session =
         if result_del == None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                                 detail=f"Request with id: {d_req.req_id} does not exist")
-        if result_del.req_status == "Pending":
+        if result_del.req_status == "pending":
             del_req.delete(synchronize_session=False)
             db.commit()
             return Response(status_code=status.HTTP_204_NO_CONTENT)
