@@ -1,6 +1,6 @@
 import time
 from fastapi import FastAPI, status, Request, HTTPException
-from app.dbase import models
+from app.dbase import models, config
 from app.routes import admin, auth, user, doubt_clearing_request, rec_request, tutor
 from app.dbase.database import engine
 from fastapi.responses import HTMLResponse
@@ -26,14 +26,15 @@ templates = Jinja2Templates(directory="app/templates")
 @app.exception_handler(exceptions.CredentialsException)
 def forbidden_exception_handler(request: Request, exc: exceptions.CredentialsException):
     exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not validate credentials")
-    return templates.TemplateResponse("popup.html", {"request": request, "error": exception.detail},
+    return templates.TemplateResponse("popup.html", {"request": request, "error": exception.detail, 'url': config.settings.url},
                                       status_code=exception.status_code, headers={"WWW-Authenticate": "Bearer"})
 
 
 @app.exception_handler(exceptions.ForbiddenException)
 def forbidden_exception_handler(request: Request, exc: exceptions.ForbiddenException):
     forbidden_exception = HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access Forbidden")
-    return templates.TemplateResponse("popup.html", {"request": request, "forbidden": forbidden_exception.detail},
+    return templates.TemplateResponse("popup.html", {"request": request, "forbidden": forbidden_exception.detail,
+                                                     'url': config.settings.url},
                                       status_code=forbidden_exception.status_code)
 
 
@@ -55,7 +56,8 @@ def forbidden_exception_handler(request: Request, exc: status.HTTP_500_INTERNAL_
 def forbidden_exception_handler(request: Request, exc: exceptions.ForbiddenException):
     not_authenticated_exception = HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not Authenticated")
     return templates.TemplateResponse("popup.html", {"request": request,
-                                                     "not_authenticated": not_authenticated_exception.detail},
+                                                     "not_authenticated": not_authenticated_exception.detail,
+                                                     'url': config.settings.url},
                                       status_code=not_authenticated_exception.status_code)
 
 
@@ -70,4 +72,4 @@ async def add_process_time_header(request: Request, call_next):
 
 @app.get("/", status_code=status.HTTP_200_OK, response_class=HTMLResponse)
 def home(request: Request):
-    return templates.TemplateResponse("home.html", {"request": request})
+    return templates.TemplateResponse("home.html", {"request": request, 'url': config.settings.url})

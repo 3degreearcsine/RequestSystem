@@ -1,9 +1,8 @@
 from passlib.context import CryptContext
 from sqlalchemy.orm import Query
 from app.dbase import models, database
-from jose import JWTError, jwt
+from jose import jwt
 from app.dbase.config import settings
-from datetime import datetime, timedelta
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -66,3 +65,8 @@ def check_tutor_course(id: int):
     chk_tut_course = Query([models.Tutor]).filter(models.Tutor.user_id == id)
     chk_tut_course_result = chk_tut_course.with_session(database.session).first()
     return chk_tut_course_result
+
+def check_if_tutor_exists(tutor_of: str):
+    chk_tut_already_exists = Query([models.Tutor]).filter(models.Tutor.tutor_of == tutor_of)
+    chk_tut_already_exists_result = chk_tut_already_exists.with_session(database.session).first()
+    return chk_tut_already_exists_result

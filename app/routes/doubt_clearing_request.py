@@ -18,8 +18,11 @@ def user_new_dcsrf(response: Response, n_dcsreq: schemas.DCSReq, db: Session = D
             db.add(new_dcsreq)
             db.commit()
             db.refresh(new_dcsreq)
+            session.remove()
             return new_dcsreq
+        session.remove()
         return Response(status_code=status.HTTP_400_BAD_REQUEST, content="Invalid course name")
+    session.remove()
     error = "Access Forbidden"
     response.status_code = status.HTTP_403_FORBIDDEN
     return error
@@ -30,7 +33,9 @@ def user_dcsrf_history(response: Response, db: Session = Depends(get_db),
                        current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'student':
         dcsrf_his = db.query(models.SessionRequest).filter(models.SessionRequest.stu_email == current_user.email).all()
+        session.remove()
         return dcsrf_his
+    session.remove()
     error = "Access Forbidden"
     response.status_code = status.HTTP_403_FORBIDDEN
     return error
@@ -43,12 +48,15 @@ def user_delete_dcsf(response: Response, d_req: schemas.ReqDelete, db: Session =
         del_req = db.query(models.SessionRequest).filter(models.SessionRequest.stu_email == current_user.email,models.SessionRequest.req_id == d_req.req_id)
         result_del = del_req.first()
         if result_del == None:
+            session.remove()
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                                 detail=f"Request with id: {d_req.req_id} does not exist")
         if result_del.req_status == "pending":
             del_req.delete(synchronize_session=False)
             db.commit()
+            session.remove()
             return Response(status_code=status.HTTP_204_NO_CONTENT)
+    session.remove()
     error = "Access Forbidden"
     response.status_code = status.HTTP_403_FORBIDDEN
     return error

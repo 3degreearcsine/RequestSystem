@@ -77,6 +77,7 @@ class StudentAllDetails(BaseModel):
         orm_mode = True
 
 
+@form_body
 class AdminInfo(BaseModel):
     dob: date
     address: constr(to_lower=True)

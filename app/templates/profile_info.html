@@ -115,13 +115,13 @@
             <label for="address"><b>Address</b></label>
             <input type="text" placeholder="Enter Your Address" id="address" name="address" required>
             <label for="contact_no"><b>Contact Number</b></label>
-            <input type="number" placeholder="Enter Your Mobile Number" id="contact_no" name="contact_no" required>
+            <input type="number" placeholder="Enter Your Mobile Number" id="contact_no" name="contact_no" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="10" required>
 
             <button class = "button button1" type="submit" >Submit</button>
         </div>
     </form>
     <form class="logout" action="/logout" method="post">
-        <button type="submit" onclick="location.href='http://127.0.0.1:8000/logout'" class="logoutbtn">Logout
+        <button type="submit" onclick="location.href='{{url}}logout'" class="logoutbtn">Logout
         </button>
     </form>
 </div>
@@ -135,16 +135,16 @@
         </div>
         <div class="container">
             <label for="dob_admin"><b>Address</b></label>
-            <input type="text" id="dob_admin" name="dob" required>
+            <input type="date" id="dob_admin" name="dob" required>
             <label for="address_admin"><b>Address</b></label>
             <input type="text" placeholder="Enter Your Address" id="address_admin" name="address" required>
             <label for="contact_no_admin"><b>Contact Number</b></label>
-            <input type="number" placeholder="Enter Your Mobile Number" id="contact_no_admin" name="contact_no" required>
+            <input type="number" placeholder="Enter Your Mobile Number" id="contact_no_admin" name="contact_no" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="10" required>
             <button class = "button button1" type="submit" >Submit</button>
         </div>
     </form>
     <form class="logout" action="/logout" method="post">
-        <button type="submit" onclick="location.href='http://127.0.0.1:8000/logout'" class="logoutbtn">Logout
+        <button type="submit" onclick="location.href='{{url}}logout'" class="logoutbtn">Logout
         </button>
     </form>
 </div>
@@ -161,20 +161,20 @@
             <label for="tutor_of"><b>Course Name</b></label>
             <select id= "tutor_of" name="tutor_of" required>
                 <option value="">None</option>
-                <option value="admin">Java</option>
-                <option value="student">Python</option>
+                <option value="java">Java</option>
+                <option value="python">Python</option>
             </select>
             <label for="dob_tutor"><b>Address</b></label>
             <input type="date" id="dob_tutor" name="dob" value="YYYY-MM-DD" required>
             <label for="address_tutor"><b>Address</b></label>
             <input type="text" placeholder="Enter Your Address" id="address_tutor" name="address" required>
             <label for="contact_no_tutor"><b>Contact Number</b></label>
-            <input type="number" placeholder="Enter Your Mobile Number" id="contact_no_tutor" name="contact_no" required>
+            <input type="number" placeholder="Enter Your Mobile Number" id="contact_no_tutor" name="contact_no" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="10" required>
             <button class = "button button1" type="submit" >Submit</button>
         </div>
     </form>
     <form class="logout" action="/logout" method="post">
-        <button type="submit" onclick="location.href='http://127.0.0.1:8000/logout'" class="logoutbtn">Logout
+        <button type="submit" onclick="location.href='{{url}}logout'" class="logoutbtn">Logout
         </button>
     </form>
 </div>

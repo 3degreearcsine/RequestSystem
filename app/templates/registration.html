@@ -58,7 +58,7 @@
     <div class ="popup" id="error">
         <img src="/static/images/error.png">
        <p>{{error}} </p>
-        <button type="button" onclick="location.href='http://127.0.0.1:8000/'">OK</button>
+        <button type="button" onclick="location.href='{{url}}'">OK</button>
     </div>
     {% endif %}
     {% if data %}
@@ -66,7 +66,7 @@
         <img src="/static/images/tickmark.png">
         <h2>Thank You!</h2>
         <p>{{data}} </p>
-        <button type="button" onclick="location.href='http://127.0.0.1:8000/'">OK</button>
+        <button type="button" onclick="location.href='{{url}}'">OK</button>
     </div>
     {% endif %}
 </div>

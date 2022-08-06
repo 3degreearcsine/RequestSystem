@@ -109,7 +109,7 @@
         <img src="/static/images/error.png">
         <h2>Error</h2>
        <p>{{error}} </p>
-        <button type="button" onclick="location.href='http://127.0.0.1:8000/'">OK</button>
+        <button type="button" onclick="location.href='{{url}}'">OK</button>
     </div>
     {% endif %}
     {% if forbidden %}
@@ -125,7 +125,7 @@
         <img src="/static/images/error.png">
         <h2>Error</h2>
        <p>{{not_authenticated}} </p>
-        <button type="button" onclick="location.href='http://127.0.0.1:8000/'">OK</button>
+        <button type="button" onclick="location.href='{{url}}'">OK</button>
     </div>
     {% endif %}
     {% if not_allowed %}
@@ -152,35 +152,35 @@
         <form class="logout" action="/logout" method="post">
             <button type="submit" class="logoutbtn">Logout</button>
         </form>
-        <button type="button" onclick="location.href='http://127.0.0.1:8000/'" class="cancelbtn">Cancel</button>
+        <button type="button" onclick="location.href='{{url}}'" class="cancelbtn">Cancel</button>
     </div>
     {% endif %}
     {% if detail %}
     <div class ="popup" id="success">
         <img src="/static/images/tickmark.png">
         <p>{{detail}}</p>
-        <button type="button" onclick="location.href='http://127.0.0.1:8000/'">OK</button>
+        <button type="button" onclick="location.href='{{url}}'">OK</button>
     </div>
     {% endif %}
     {% if stu_update_detail %}
     <div class ="popup" id="stu_update_detail">
         <img src="/static/images/tickmark.png">
         <p>{{stu_update_detail}}</p>
-        <button type="button" onclick="location.href='http://127.0.0.1:8000/student_profile'">OK</button>
+        <button type="button" onclick="location.href='{{url}}student_profile'">OK</button>
     </div>
     {% endif %}
     {% if adm_update_detail %}
     <div class ="popup" id="adm_update_detail">
         <img src="/static/images/tickmark.png">
         <p>{{adm_update_detail}}</p>
-        <button type="button" onclick="location.href='http://127.0.0.1:8000/admin_profile'">OK</button>
+        <button type="button" onclick="location.href='{{url}}admin_profile'">OK</button>
     </div>
     {% endif %}
     {% if tut_update_detail %}
     <div class ="popup" id="tut_update_detail">
         <img src="/static/images/tickmark.png">
         <p>{{tut_update_detail}}</p>
-        <button type="button" onclick="location.href='http://127.0.0.1:8000/tutor_profile'">OK</button>
+        <button type="button" onclick="location.href='{{url}}tutor_profile'">OK</button>
     </div>
     {% endif %}
 </div>

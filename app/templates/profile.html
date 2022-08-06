@@ -39,23 +39,23 @@
 <body>
 <header>
     {% if s_profile %}
-    <a href='http://127.0.0.1:8000/student_profile'>
+    <a href='{{url}}student_profile'>
         <img src="/static/images/Systemicon.png" alt="Request System" >
     </a>
     {% endif %}
     {% if a_profile %}
-    <a href='http://127.0.0.1:8000/admin_profile'>
+    <a href='{{url}}admin_profile'>
         <img src="/static/images/Systemicon.png" alt="Request System" >
     </a>
     {% endif %}
     {% if t_profile %}
-    <a href='http://127.0.0.1:8000/tutor_profile'>
+    <a href='{{url}}tutor_profile'>
         <img src="/static/images/Systemicon.png" alt="Request System" >
     </a>
     {% endif %}
     <h2>Welcome {{role|title}}, {{first_name|title}} {{last_name|title}}</h2>
     <form class="logout" action="/logout" method="post">
-        <button type="submit" onclick="location.href='http://127.0.0.1:8000/logout'" class="logoutbtn">Logout
+        <button type="submit" onclick="location.href='{{url}}logout'" class="logoutbtn">Logout
         </button>
     </form>
 </header>
