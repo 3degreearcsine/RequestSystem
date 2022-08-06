@@ -70,6 +70,13 @@ def fill_profile_info(request: Request, current_user: int = Depends(oauth2.get_c
 def add_student_info(request: Request, response: Response, student: schemas.StudentInfo = Depends(), db: Session = Depends(get_db),
                      current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'student':
+        if len(str(student.contact_no)) < 10 or len(str(student.contact_no)) > 10:
+            session.remove()
+            return main.templates.TemplateResponse('popup.html',
+                                                   context={'request': request,
+                                                            'server_error': "Contact Number must be 10 digit",
+                                                            'url': config.settings.url},
+                                                   status_code=status.HTTP_400_BAD_REQUEST)
         new_student = models.Student(user_id=current_user.id, **student.dict())
         db.add(new_student)
         db.commit()
@@ -114,6 +121,13 @@ def student_profile(request: Request, response: Response, db: Session = Depends(
 def add_admin_info(request: Request, response: Response, admin: schemas.AdminInfo = Depends(), db: Session = Depends(get_db),
                    current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'admin':
+        if len(str(admin.contact_no)) < 10 or len(str(admin.contact_no)) > 10:
+            session.remove()
+            return main.templates.TemplateResponse('popup.html',
+                                                   context={'request': request,
+                                                            'server_error': "Contact Number must be 10 digit",
+                                                            'url': config.settings.url},
+                                                   status_code=status.HTTP_400_BAD_REQUEST)
         new_admin = models.Admin(user_id=current_user.id, **admin.dict())
         db.add(new_admin)
         db.commit()
@@ -124,6 +138,7 @@ def add_admin_info(request: Request, response: Response, admin: schemas.AdminInf
                                                                       'adm_update_detail': adm_update_detail,
                                                                       'url': config.settings.url},
                                                status_code=status.HTTP_201_CREATED)
+
     session.remove()
     error = "Access Forbidden"
     response.status_code = status.HTTP_403_FORBIDDEN
@@ -168,6 +183,7 @@ def add_tutor_info(request: Request, response: Response, tutor: schemas.TutorInf
                                                    context={'request': request, 'server_error': invalid_tutor_exception.detail, 'url': config.settings.url},
                                                    status_code=invalid_tutor_exception.status_code)
         if len(str(tutor.contact_no)) < 10 or len(str(tutor.contact_no)) > 10:
+            session.remove()
             return main.templates.TemplateResponse('popup.html',
                                                    context={'request': request,
                                                             'server_error': "Contact Number must be 10 digit",
