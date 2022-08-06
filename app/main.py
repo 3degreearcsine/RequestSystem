@@ -54,8 +54,10 @@ def forbidden_exception_handler(request: Request, exc: status.HTTP_500_INTERNAL_
 @app.exception_handler(status.HTTP_403_FORBIDDEN)
 def forbidden_exception_handler(request: Request, exc: exceptions.ForbiddenException):
     not_authenticated_exception = HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not Authenticated")
-    return templates.TemplateResponse("popup.html", {"request": request, "not_authenticated": not_authenticated_exception.detail},
+    return templates.TemplateResponse("popup.html", {"request": request,
+                                                     "not_authenticated": not_authenticated_exception.detail},
                                       status_code=not_authenticated_exception.status_code)
+
 
 @app.middleware("http")
 async def add_process_time_header(request: Request, call_next):
