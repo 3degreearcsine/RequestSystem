@@ -73,8 +73,8 @@ def add_student_info(request: Request, response: Response, student: schemas.Stud
     return error
 
 
-@router.get("/student_profile", response_model=schemas.StudentAllDetails)
-def student_profile(response: Response, db: Session = Depends(get_db),
+@router.get("/student_profile", response_model=schemas.StudentAllDetails, response_class=HTMLResponse)
+def student_profile(request: Request, response: Response, db: Session = Depends(get_db),
                     current_user: int = Depends(oauth2.get_current_user)):
 
     if current_user.role == 'student':
@@ -84,7 +84,13 @@ def student_profile(response: Response, db: Session = Depends(get_db),
         s_updated_profile = db.query(models.Users, models.Student).join(models.Student,
                                                                         models.Student.user_id == models.Users.id,
                                                                         isouter=True).filter(models.Student.user_id == current_user.id).first()
-        return s_updated_profile
+        first_name = utils.check_if_email_exists(current_user.email).firstname
+        last_name = utils.check_if_email_exists(current_user.email).lastname
+        # return s_updated_profile
+        return main.templates.TemplateResponse('profile.html', context={'request': request, 's_profile': s_updated_profile,
+                                                                        'role': current_user.role, 'first_name': first_name,
+                                                                        'last_name': last_name},
+                                               status_code=status.HTTP_200_OK)
     error = "Access Forbidden"
     response.status_code = status.HTTP_403_FORBIDDEN
     return error

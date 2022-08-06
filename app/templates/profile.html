@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile Page</title>
+    <link id="favicon" rel="icon" type="image/x-icon" href="/static/images/favicon.ico">
+    <style>
+        .logoutbtn {
+            width: auto;
+            padding: 10px 18px;
+            background-color: #f44336;
+            border: none;
+            color: white;
+            position: fixed;
+            margin-top: 10px;
+            margin-right: 5px;
+            top: 10px;
+            right: 10px
+        }
+        img {
+            width:60px;
+            height:60px;
+            margin-top: 5px;
+            margin-left: 5px;
+        }
+        h2{
+            font-size: 20px;
+            font-weight: 500;
+            margin: 30px 0 10px 5px;
+            color: darkslategray;
+
+        }
+        header{
+            background-color: lightgray;
+        }
+
+    </style>
+</head>
+<body>
+<header>
+    {% if s_profile %}
+    <a href='http://127.0.0.1:8000/student_profile'>
+        <img src="/static/images/Systemicon.png" alt="Request System" >
+    </a>
+    {% endif %}
+    {% if a_profile %}
+    <a href='http://127.0.0.1:8000/admin_profile'>
+        <img src="/static/images/Systemicon.png" alt="Request System" >
+    </a>
+    {% endif %}
+    {% if t_profile %}
+    <a href='http://127.0.0.1:8000/tutor_profile'>
+        <img src="/static/images/Systemicon.png" alt="Request System" >
+    </a>
+    {% endif %}
+    <h2>Welcome {{role|title}}, {{first_name|title}} {{last_name|title}}</h2>
+    <form class="logout" action="/logout" method="post">
+        <button type="submit" onclick="location.href='http://127.0.0.1:8000/logout'" class="logoutbtn">Logout
+        </button>
+    </form>
+</header>
+</body>
+</html>
