@@ -110,12 +110,6 @@ class TutorInfo(BaseModel):
     address: constr(to_lower=True)
     contact_no: int
 
-    # @validator("dob", pre=True)
-    # def parse_birthdate(cls, value):
-    #     return datetime.strptime(
-    #         value,
-    #         "%d-%m-%Y"
-    #     ).date()
 
 class TutorDetails(BaseModel):
     tutor_id: int
