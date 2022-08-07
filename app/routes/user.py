@@ -1,10 +1,11 @@
 from sqlalchemy.orm import Session
 from app import schemas, oauth2, utils
-from app.dbase import models, config, database
+from app.dbase import models, config
 from fastapi import Depends, status, APIRouter, Response, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from app.dbase.database import get_db, session
 from app import main
+from fastapi.encoders import jsonable_encoder
 
 
 router = APIRouter(tags=['User Profile'])
@@ -93,7 +94,7 @@ def add_student_info(request: Request, response: Response, student: schemas.Stud
     return error
 
 
-@router.get("/student_profile", response_model=schemas.StudentAllDetails, response_class=HTMLResponse)
+@router.get("/student_profile", response_class=HTMLResponse)
 def student_profile(request: Request, response: Response, db: Session = Depends(get_db),
                     current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'student':
@@ -105,11 +106,21 @@ def student_profile(request: Request, response: Response, db: Session = Depends(
                                                                         isouter=True).filter(models.Student.user_id == current_user.id).first()
         first_name = utils.check_if_email_exists(current_user.email).firstname
         last_name = utils.check_if_email_exists(current_user.email).lastname
-        # return s_updated_profile
+
+        s_profile = schemas.StudentAllDetails.from_orm(s_updated_profile)
+        json_s_profile = jsonable_encoder(s_profile)
+        s_headings = ["First Name", "Last Name", "Email", "Student ID", "User ID", "Date of Birth", "Course Name",
+                      "Address", "Contact No"]
+        values = []
+        for k, val in json_s_profile.items():
+            for k2, val2 in val.items():
+                values.append(val2)
+        s_info_dict = dict(zip(s_headings, values))
+
         session.remove()
-        return main.templates.TemplateResponse('profile.html', context={'request': request, 's_profile': s_updated_profile,
+        return main.templates.TemplateResponse('profile.html', context={'request': request, 's_profile': json_s_profile,
                                                                         'role': current_user.role, 'first_name': first_name,
-                                                                        'last_name': last_name, 'url': config.settings.url},
+                                                                        'last_name': last_name, 'url': config.settings.url, 's_info_dict': s_info_dict},
                                                status_code=status.HTTP_200_OK)
     session.remove()
     error = "Access Forbidden"
@@ -145,7 +156,7 @@ def add_admin_info(request: Request, response: Response, admin: schemas.AdminInf
     return error
 
 
-@router.get("/admin_profile", response_model=schemas.AdminAllDetails, response_class=HTMLResponse)
+@router.get("/admin_profile", response_class=HTMLResponse)
 def admin_profile(request: Request, response: Response, db: Session = Depends(get_db),
                   current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'admin':
@@ -157,12 +168,21 @@ def admin_profile(request: Request, response: Response, db: Session = Depends(ge
                                                                       isouter=True).filter(models.Admin.user_id == current_user.id).first()
         first_name = utils.check_if_email_exists(current_user.email).firstname
         last_name = utils.check_if_email_exists(current_user.email).lastname
-        # return a_updated_profile
+
+        a_profile = schemas.AdminAllDetails.from_orm(a_updated_profile)
+        json_a_profile = jsonable_encoder(a_profile)
+        a_headings = ["First Name", "Last Name", "Email", "Admin ID", "User ID", "Date of Birth", "Address", "Contact No"]
+        values = []
+        for k, val in json_a_profile.items():
+            for k2, val2 in val.items():
+                values.append(val2)
+        info_dict = dict(zip(a_headings, values))
         session.remove()
         return main.templates.TemplateResponse('profile.html',
-                                               context={'request': request, 'a_profile': a_updated_profile,
+                                               context={'request': request, 'a_profile': json_a_profile,
                                                         'role': current_user.role, 'first_name': first_name,
-                                                        'last_name': last_name, 'url': config.settings.url},
+                                                        'last_name': last_name, 'url': config.settings.url,
+                                                        'info_dict': info_dict},
                                                status_code=status.HTTP_200_OK)
     session.remove()
     error = "Access Forbidden"
@@ -206,7 +226,7 @@ def add_tutor_info(request: Request, response: Response, tutor: schemas.TutorInf
     return error
 
 
-@router.get("/tutor_profile", response_model=schemas.TutorAllDetails, response_class=HTMLResponse)
+@router.get("/tutor_profile", response_class=HTMLResponse)
 def tutor_profile(request: Request, response: Response, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'tutor':
         if not utils.check_if_profile_complete(current_user.id, current_user.role):
@@ -217,15 +237,24 @@ def tutor_profile(request: Request, response: Response, db: Session = Depends(ge
                                                                       isouter=True).filter(models.Tutor.user_id == current_user.id).first()
         first_name = utils.check_if_email_exists(current_user.email).firstname
         last_name = utils.check_if_email_exists(current_user.email).lastname
+
+        t_profile = schemas.TutorAllDetails.from_orm(t_updated_profile)
+        json_s_profile = jsonable_encoder(t_profile)
+        t_headings = ["First Name", "Last Name", "Email", "Tutor ID", "User ID", "Course Name", "Date of Birth",
+                      "Address", "Contact No"]
+        values = []
+        for k, val in json_s_profile.items():
+            for k2, val2 in val.items():
+                values.append(val2)
+        t_info_dict = dict(zip(t_headings, values))
         session.remove()
-        # return t_updated_profile
         return main.templates.TemplateResponse('profile.html',
                                                context={'request': request, 't_profile': t_updated_profile,
                                                         'role': current_user.role, 'first_name': first_name,
-                                                        'last_name': last_name, 'url': config.settings.url},
+                                                        'last_name': last_name, 'url': config.settings.url,
+                                                        't_info_dict': t_info_dict},
                                                status_code=status.HTTP_200_OK)
     session.remove()
     error = "Access Forbidden"
     response.status_code = status.HTTP_403_FORBIDDEN
     return error
-

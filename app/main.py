@@ -30,6 +30,13 @@ def forbidden_exception_handler(request: Request, exc: exceptions.CredentialsExc
                                       status_code=exception.status_code, headers={"WWW-Authenticate": "Bearer"})
 
 
+@app.exception_handler(exceptions.TokenExpiredException)
+def forbidden_exception_handler(request: Request, exc: exceptions.TokenExpiredException):
+    exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Session Expired")
+    return templates.TemplateResponse("popup.html", {"request": request, "error": exception.detail, 'url': config.settings.url},
+                                      status_code=exception.status_code, headers={"WWW-Authenticate": "Bearer"})
+
+
 @app.exception_handler(exceptions.ForbiddenException)
 def forbidden_exception_handler(request: Request, exc: exceptions.ForbiddenException):
     forbidden_exception = HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access Forbidden")

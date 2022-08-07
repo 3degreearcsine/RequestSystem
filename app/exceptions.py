@@ -7,3 +7,6 @@ class ForbiddenException(Exception):
     def __init__(self):
         pass
 
+class TokenExpiredException(Exception):
+    def __init__(self):
+        pass
