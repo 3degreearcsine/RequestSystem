@@ -48,7 +48,7 @@ class OAuth2PasswordBearerCookie(OAuth2):
 
         if not authorization or scheme.lower() != "bearer":
             if self.auto_error:
-                raise HTTPException(status_code= status.HTTP_403_FORBIDDEN, detail="Not Authenticated")
+                raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not Authenticated")
             else:
                 return None
         return param
@@ -67,7 +67,7 @@ def create_access_token(data: dict):
     return encoded_jwt
 
 
-def get_user_token(token:str = Depends(oauth2_scheme)):
+def get_user_token(token: str = Depends(oauth2_scheme)):
     return token
 
 
@@ -114,5 +114,3 @@ def verify_access_token(token: str):
 
 def get_current_user(token: str = Depends(oauth2_scheme)):
     return verify_access_token(token)
-
-

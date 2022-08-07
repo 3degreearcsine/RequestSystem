@@ -45,7 +45,7 @@ def all_pending_requests(response: Response, db: Session = Depends(get_db), curr
     raise exceptions.ForbiddenException
 
 
-@router.get("/admin_profile/requests/all_pending_dcsf")
+@router.get("/admin_profile/requests/all_pending_dcsr")
 def all_pending_requests(response: Response, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'admin':
         dcsf_act_pending = db.query(models.SessionRequest).filter(or_(models.SessionRequest.req_status == 'pending',
@@ -75,7 +75,7 @@ def admin_action_rrf(response: Response, a_req: schemas.ReqAction, db: Session =
     return error
 
 
-@router.put("/admin_profile/requests/all_pending_dcsf/action_dcsf")
+@router.put("/admin_profile/requests/all_pending_dcsr/action_dcsr")
 def admin_action_dcsf(response: Response, a_req: schemas.ReqAction, db: Session = Depends(get_db),
                       current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'admin':

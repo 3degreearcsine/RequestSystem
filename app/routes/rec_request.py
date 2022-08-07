@@ -44,15 +44,15 @@ def user_rrf_history(response: Response, db: Session = Depends(get_db),
 @router.delete("/student_profile/rr/delete_rrf")
 def user_delete_rrf(response: Response, d_req: schemas.ReqDelete, db: Session = Depends(get_db),
                     current_user: int = Depends(oauth2.get_current_user)):
-    del_req = db.query(models.RecRequest).filter(models.RecRequest.stu_email == current_user.email, models.RecRequest.req_id == d_req.req_id)
-    result_del = del_req.first()
+    result_del = db.query(models.RecRequest).filter(models.RecRequest.stu_email == current_user.email,
+                                                    models.RecRequest.req_id == d_req.req_id).first()
     if current_user.role == 'student':
-        if del_req.first() == None:
+        if result_del is None:
             database.session.remove()
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                                 detail=f"Request with id: {d_req.req_id} does not exist")
         if result_del.req_status == "pending":
-            del_req.delete(synchronize_session=False)
+            result_del.delete(synchronize_session=False)
             db.commit()
             database.session.remove()
             return Response(status_code=status.HTTP_204_NO_CONTENT)

@@ -8,7 +8,7 @@ from pydantic.class_validators import List
 router = APIRouter(tags=['Doubt Clearing Request'])
 
 
-@router.post("/student_profile/dcsr/new_dcsf", status_code=status.HTTP_201_CREATED, response_model=schemas.DCSReqOut)
+@router.post("/student_profile/dcsr/new_dcsr", status_code=status.HTTP_201_CREATED, response_model=schemas.DCSReqOut)
 def user_new_dcsrf(response: Response, n_dcsreq: schemas.DCSReq, db: Session = Depends(get_db),
                    current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'student':
@@ -28,7 +28,7 @@ def user_new_dcsrf(response: Response, n_dcsreq: schemas.DCSReq, db: Session = D
     return error
 
 
-@router.get("/student_profile/dcsr/dcsf_history", response_model=List[schemas.DCSReqOut])
+@router.get("/student_profile/dcsr/dcsr_history", response_model=List[schemas.DCSReqOut])
 def user_dcsrf_history(response: Response, db: Session = Depends(get_db),
                        current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'student':
@@ -41,13 +41,13 @@ def user_dcsrf_history(response: Response, db: Session = Depends(get_db),
     return error
 
 
-@router.delete("/student_profile/dcsr/delete_dcsf")
-def user_delete_dcsf(response: Response, d_req: schemas.ReqDelete, db: Session = Depends(get_db),
-                     current_user: int = Depends(oauth2.get_current_user)):
+@router.delete("/student_profile/dcsr/delete_dcsr")
+def user_delete_dcsrf(response: Response, d_req: schemas.ReqDelete, db: Session = Depends(get_db),
+                      current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'student':
-        del_req = db.query(models.SessionRequest).filter(models.SessionRequest.stu_email == current_user.email,models.SessionRequest.req_id == d_req.req_id)
-        result_del = del_req.first()
-        if result_del == None:
+        result_del = db.query(models.SessionRequest).filter(models.SessionRequest.stu_email == current_user.email,
+                                                            models.SessionRequest.req_id == d_req.req_id).first()
+        if result_del is None:
             session.remove()
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                                 detail=f"Request with id: {d_req.req_id} does not exist")
@@ -60,5 +60,3 @@ def user_delete_dcsf(response: Response, d_req: schemas.ReqDelete, db: Session =
     error = "Access Forbidden"
     response.status_code = status.HTTP_403_FORBIDDEN
     return error
-
-

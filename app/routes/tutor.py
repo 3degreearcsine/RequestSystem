@@ -8,19 +8,19 @@ from pydantic.class_validators import List
 router = APIRouter(tags=['Staff'])
 
 
-@router.get("/tutur_profile/requests_dcsf")
+@router.get("/tutur_profile/requests_dcsr")
 def all_pending_requests(response: Response, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'tutor':
         chk_tut_sub = utils.check_tutor_course(current_user.id)
-        dcsf_a_pending = db.query(models.SessionRequest).filter(models.SessionRequest.subject == chk_tut_sub.tutor_of).filter(
+        dcsr_a_pending = db.query(models.SessionRequest).filter(models.SessionRequest.subject == chk_tut_sub.tutor_of).filter(
             models.SessionRequest.req_status == 'forwarded').all()
         session.remove()
-        return dcsf_a_pending
+        return dcsr_a_pending
     session.remove()
     raise exceptions.ForbiddenException
 
 
-@router.put("/tutor_profile/requests_dcsf/action_dcsf")
+@router.put("/tutor_profile/requests_dcsr/action_dcsr")
 def tutor_action_dcsf(response: Response, t_req: schemas.ReqAction, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'tutor':
         act_req = db.query(models.SessionRequest).filter(models.SessionRequest.req_id == t_req.req_id)
