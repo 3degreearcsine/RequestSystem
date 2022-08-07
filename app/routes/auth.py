@@ -8,7 +8,7 @@ from app.dbase import models, database, config
 router = APIRouter(tags=['Authentication'])
 
 
-@router.post("/login")
+@router.post("/login", response_class=HTMLResponse)
 def login(request: Request, user_credentials: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(database.get_db)):
     token = request.cookies.get("Authorization")
     if token:
@@ -45,7 +45,7 @@ def login(request: Request, user_credentials: OAuth2PasswordRequestForm = Depend
     return response
 
 
-@router.post("/logout")
+@router.post("/logout", response_class=HTMLResponse)
 def logout(request: Request, token: str = Depends(oauth2.get_user_token), current_user: int = Depends(oauth2.get_current_user), db: Session = Depends(database.get_db)):
     l_out = models.BlackListedTokens(token=token, email=current_user.email.lower())
     db.add(l_out)

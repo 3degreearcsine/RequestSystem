@@ -67,7 +67,7 @@ def fill_profile_info(request: Request, current_user: int = Depends(oauth2.get_c
                                                status_code=status.HTTP_200_OK)
 
 
-@router.post("/complete_student_profile", status_code=status.HTTP_201_CREATED)
+@router.post("/complete_student_profile", response_class=HTMLResponse)
 def add_student_info(request: Request, response: Response, student: schemas.StudentInfo = Depends(), db: Session = Depends(get_db),
                      current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'student':
@@ -128,7 +128,7 @@ def student_profile(request: Request, response: Response, db: Session = Depends(
     return error
 
 
-@router.post("/complete_admin_profile")
+@router.post("/complete_admin_profile", response_class=HTMLResponse)
 def add_admin_info(request: Request, response: Response, admin: schemas.AdminInfo = Depends(), db: Session = Depends(get_db),
                    current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'admin':
@@ -190,7 +190,7 @@ def admin_profile(request: Request, response: Response, db: Session = Depends(ge
     return error
 
 
-@router.post("/complete_tutor_profile")
+@router.post("/complete_tutor_profile", response_class=HTMLResponse)
 def add_tutor_info(request: Request, response: Response, tutor: schemas.TutorInfo = Depends(), db: Session = Depends(get_db),
                    current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'tutor':
