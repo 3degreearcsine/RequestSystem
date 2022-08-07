@@ -26,14 +26,16 @@ templates = Jinja2Templates(directory="app/templates")
 @app.exception_handler(exceptions.CredentialsException)
 def forbidden_exception_handler(request: Request, exc: exceptions.CredentialsException):
     exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not validate credentials")
-    return templates.TemplateResponse("popup.html", {"request": request, "error": exception.detail, 'url': config.settings.url},
+    return templates.TemplateResponse("popup.html", {"request": request, "error": exception.detail,
+                                                     'url': config.settings.url},
                                       status_code=exception.status_code, headers={"WWW-Authenticate": "Bearer"})
 
 
 @app.exception_handler(exceptions.TokenExpiredException)
 def forbidden_exception_handler(request: Request, exc: exceptions.TokenExpiredException):
     exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Session Expired")
-    return templates.TemplateResponse("popup.html", {"request": request, "error": exception.detail, 'url': config.settings.url},
+    return templates.TemplateResponse("popup.html", {"request": request, "error": exception.detail,
+                                                     'url': config.settings.url},
                                       status_code=exception.status_code, headers={"WWW-Authenticate": "Bearer"})
 
 
