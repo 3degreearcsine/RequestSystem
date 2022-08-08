@@ -24,15 +24,18 @@ templates = Jinja2Templates(directory="app/templates")
 
 
 @app.exception_handler(exceptions.CredentialsException)
-def forbidden_exception_handler(request: Request, exc: exceptions.CredentialsException):
+def credentials_exception_handler(request: Request, exc: exceptions.CredentialsException):
     exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not validate credentials")
-    return templates.TemplateResponse("popup.html", {"request": request, "error": exception.detail,
+
+    response = templates.TemplateResponse("popup.html", {"request": request, "error": exception.detail,
                                                      'url': config.settings.url},
-                                      status_code=exception.status_code, headers={"WWW-Authenticate": "Bearer"})
+                                          status_code=exception.status_code, headers={"WWW-Authenticate": "Bearer"})
+    response.delete_cookie("Authorization")
+    return response
 
 
 @app.exception_handler(exceptions.TokenExpiredException)
-def forbidden_exception_handler(request: Request, exc: exceptions.TokenExpiredException):
+def token_expired_exception_handler(request: Request, exc: exceptions.TokenExpiredException):
     exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Session Expired")
     return templates.TemplateResponse("popup.html", {"request": request, "error": exception.detail,
                                                      'url': config.settings.url},
@@ -48,14 +51,14 @@ def forbidden_exception_handler(request: Request, exc: exceptions.ForbiddenExcep
 
 
 @app.exception_handler(status.HTTP_405_METHOD_NOT_ALLOWED)
-def forbidden_exception_handler(request: Request, exc: status.HTTP_405_METHOD_NOT_ALLOWED):
+def method_exception_handler(request: Request, exc: status.HTTP_405_METHOD_NOT_ALLOWED):
     not_allowed_exception = HTTPException(status_code=status.HTTP_405_METHOD_NOT_ALLOWED, detail="Method Not Allowed")
     return templates.TemplateResponse("popup.html", {"request": request, "not_allowed": not_allowed_exception.detail},
                                       status_code=not_allowed_exception.status_code)
 
 
 @app.exception_handler(status.HTTP_500_INTERNAL_SERVER_ERROR)
-def forbidden_exception_handler(request: Request, exc: status.HTTP_500_INTERNAL_SERVER_ERROR):
+def server_exception_handler(request: Request, exc: status.HTTP_500_INTERNAL_SERVER_ERROR):
     server_error = HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal Server Error")
     return templates.TemplateResponse("popup.html", {"request": request, "server_error": server_error.detail},
                                       status_code=server_error.status_code)
