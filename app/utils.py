@@ -64,6 +64,7 @@ def check_tutor_course(id: int):
                                                          id).with_session(database.session).first()
     return chk_tut_course_result
 
+
 def check_if_tutor_exists(tutor_of: str):
     chk_tut_already_exists_result = Query([models.Tutor]).filter(models.Tutor.tutor_of ==
                                                                  tutor_of).with_session(database.session).first()

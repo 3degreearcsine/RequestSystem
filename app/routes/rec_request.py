@@ -23,9 +23,7 @@ def user_new_rrf(response: Response, n_req: schemas.RecReq, db: Session = Depend
         database.session.remove()
         return Response(status_code=status.HTTP_400_BAD_REQUEST, content="Invalid course name")
     database.session.remove()
-    error = "Access Forbidden"
-    response.status_code = status.HTTP_403_FORBIDDEN
-    return error
+    raise exceptions.ForbiddenException
 
 
 @router.get("/student_profile/rr/rrf_history", response_model=List[schemas.RecReqOut])
@@ -36,9 +34,7 @@ def user_rrf_history(response: Response, db: Session = Depends(get_db),
         database.session.remove()
         return rrf_his
     database.session.remove()
-    error = "Access Forbidden"
-    response.status_code = status.HTTP_403_FORBIDDEN
-    return error
+    raise exceptions.ForbiddenException
 
 
 @router.delete("/student_profile/rr/delete_rrf")
@@ -57,6 +53,4 @@ def user_delete_rrf(response: Response, d_req: schemas.ReqDelete, db: Session = 
             database.session.remove()
             return Response(status_code=status.HTTP_204_NO_CONTENT)
     database.session.remove()
-    error = "Access Forbidden"
-    response.status_code = status.HTTP_403_FORBIDDEN
-    return error
+    raise exceptions.ForbiddenException

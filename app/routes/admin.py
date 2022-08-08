@@ -17,9 +17,7 @@ def all_students(response: Response, db: Session = Depends(get_db), current_user
         database.session.remove()
         return stu_profiles
     database.session.remove()
-    error = "Access Forbidden"
-    response.status_code = status.HTTP_403_FORBIDDEN
-    return error
+    raise exceptions.ForbiddenException
 
 
 @router.get("/admin_profile/all_tutors", response_model=List[schemas.AllTutors])
@@ -30,9 +28,7 @@ def all_tutors(response: Response, db: Session = Depends(get_db), current_user: 
         database.session.remove()
         return tut_profiles
     database.session.remove()
-    error = "Access Forbidden"
-    response.status_code = status.HTTP_403_FORBIDDEN
-    return error
+    raise exceptions.ForbiddenException
 
 
 @router.get("/admin_profile/requests/all_pending_rrf")
@@ -70,9 +66,7 @@ def admin_action_rrf(response: Response, a_req: schemas.ReqAction, db: Session =
         database.session.remove()
         return Response(status_code=status.HTTP_204_NO_CONTENT)
     database.session.remove()
-    error = "Access Forbidden"
-    response.status_code = status.HTTP_403_FORBIDDEN
-    return error
+    raise exceptions.ForbiddenException
 
 
 @router.put("/admin_profile/requests/all_pending_dcsr/action_dcsr")
@@ -89,9 +83,7 @@ def admin_action_dcsf(response: Response, a_req: schemas.ReqAction, db: Session 
         database.session.remove()
         return Response(status_code=status.HTTP_204_NO_CONTENT)
     database.session.remove()
-    error = "Access Forbidden"
-    response.status_code = status.HTTP_403_FORBIDDEN
-    return error
+    raise exceptions.ForbiddenException
 
 
 

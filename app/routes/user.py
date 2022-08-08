@@ -89,9 +89,7 @@ def add_student_info(request: Request, response: Response, student: schemas.Stud
                                                                       'url': config.settings.url},
                                                status_code=status.HTTP_201_CREATED)
     session.remove()
-    error = "Access Forbidden"
-    response.status_code = status.HTTP_403_FORBIDDEN
-    return error
+    raise exceptions.ForbiddenException
 
 
 @router.get("/student_profile", response_class=HTMLResponse)
@@ -123,9 +121,7 @@ def student_profile(request: Request, response: Response, db: Session = Depends(
                                                                         'last_name': last_name, 'url': config.settings.url, 's_info_dict': s_info_dict},
                                                status_code=status.HTTP_200_OK)
     session.remove()
-    error = "Access Forbidden"
-    response.status_code = status.HTTP_403_FORBIDDEN
-    return error
+    raise exceptions.ForbiddenException
 
 
 @router.post("/complete_admin_profile", response_class=HTMLResponse)
@@ -151,9 +147,7 @@ def add_admin_info(request: Request, response: Response, admin: schemas.AdminInf
                                                status_code=status.HTTP_201_CREATED)
 
     session.remove()
-    error = "Access Forbidden"
-    response.status_code = status.HTTP_403_FORBIDDEN
-    return error
+    raise exceptions.ForbiddenException
 
 
 @router.get("/admin_profile", response_class=HTMLResponse)
@@ -185,9 +179,7 @@ def admin_profile(request: Request, response: Response, db: Session = Depends(ge
                                                         'info_dict': info_dict},
                                                status_code=status.HTTP_200_OK)
     session.remove()
-    error = "Access Forbidden"
-    response.status_code = status.HTTP_403_FORBIDDEN
-    return error
+    raise exceptions.ForbiddenException
 
 
 @router.post("/complete_tutor_profile", response_class=HTMLResponse)
@@ -221,9 +213,7 @@ def add_tutor_info(request: Request, response: Response, tutor: schemas.TutorInf
                                                                       'url': config.settings.url},
                                                status_code=status.HTTP_201_CREATED)
     session.remove()
-    error = "Access Forbidden"
-    response.status_code = status.HTTP_403_FORBIDDEN
-    return error
+    raise exceptions.ForbiddenException
 
 
 @router.get("/tutor_profile", response_class=HTMLResponse)
@@ -255,6 +245,4 @@ def tutor_profile(request: Request, response: Response, db: Session = Depends(ge
                                                         't_info_dict': t_info_dict},
                                                status_code=status.HTTP_200_OK)
     session.remove()
-    error = "Access Forbidden"
-    response.status_code = status.HTTP_403_FORBIDDEN
-    return error
+    raise exceptions.ForbiddenException

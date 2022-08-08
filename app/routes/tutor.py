@@ -36,6 +36,4 @@ def tutor_action_dcsf(response: Response, t_req: schemas.ReqAction, db: Session 
         session.remove()
         return Response(status_code=status.HTTP_400_BAD_REQUEST, content=f"Invalid Input {t_req.req_status}")
     session.remove()
-    error = "Access Forbidden"
-    response.status_code = status.HTTP_403_FORBIDDEN
-    return error
+    raise exceptions.ForbiddenException

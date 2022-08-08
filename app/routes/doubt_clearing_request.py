@@ -23,9 +23,7 @@ def user_new_dcsrf(response: Response, n_dcsreq: schemas.DCSReq, db: Session = D
         session.remove()
         return Response(status_code=status.HTTP_400_BAD_REQUEST, content="Invalid course name")
     session.remove()
-    error = "Access Forbidden"
-    response.status_code = status.HTTP_403_FORBIDDEN
-    return error
+    raise exceptions.ForbiddenException
 
 
 @router.get("/student_profile/dcsr/dcsr_history", response_model=List[schemas.DCSReqOut])
@@ -36,9 +34,7 @@ def user_dcsrf_history(response: Response, db: Session = Depends(get_db),
         session.remove()
         return dcsrf_his
     session.remove()
-    error = "Access Forbidden"
-    response.status_code = status.HTTP_403_FORBIDDEN
-    return error
+    raise exceptions.ForbiddenException
 
 
 @router.delete("/student_profile/dcsr/delete_dcsr")
@@ -57,6 +53,4 @@ def user_delete_dcsrf(response: Response, d_req: schemas.ReqDelete, db: Session 
             session.remove()
             return Response(status_code=status.HTTP_204_NO_CONTENT)
     session.remove()
-    error = "Access Forbidden"
-    response.status_code = status.HTTP_403_FORBIDDEN
-    return error
+    raise exceptions.ForbiddenException
