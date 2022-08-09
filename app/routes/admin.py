@@ -12,8 +12,8 @@ router = APIRouter(tags=['Administration'])
 @router.get("/admin_profile/all_students", response_model=List[schemas.AllStudents])
 def all_students(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'admin':
-        stu_profiles = db.query(models.Users, models.Student).join(models.Student, models.Student.user_id == models.Users.id,
-                                                                   isouter=False).all()
+        stu_profiles = db.query(models.Users, models.Student).join(models.Student, models.Student.user_id ==
+                                                                   models.Users.id, isouter=False).all()
         database.session.remove()
         return stu_profiles
     database.session.remove()
@@ -31,7 +31,7 @@ def all_tutors(db: Session = Depends(get_db), current_user: int = Depends(oauth2
     raise exceptions.ForbiddenException
 
 
-@router.get("/admin_profile/requests/all_pending_rrf")
+@router.get("/admin_profile/requests/all_pending_rr")
 def all_pending_requests(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'admin':
         rrf_act_pending = db.query(models.SessionRequest).filter(models.SessionRequest.req_status == 'pending').all()
@@ -45,14 +45,15 @@ def all_pending_requests(db: Session = Depends(get_db), current_user: int = Depe
 def all_pending_requests(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'admin':
         dcsf_act_pending = db.query(models.SessionRequest).filter(or_(models.SessionRequest.req_status == 'pending',
-                                                                      models.SessionRequest.req_status == 'forwarded')).all()
+                                                                      models.SessionRequest.req_status == 'forwarded')
+                                                                  ).all()
         database.session.remove()
         return dcsf_act_pending
     database.session.remove()
     raise exceptions.ForbiddenException
 
 
-@router.put("/admin_profile/requests/all_pending_rrf/action_rrf")
+@router.put("/admin_profile/requests/all_pending_rrf/action_rr")
 def admin_action_rrf(a_req: schemas.ReqAction, db: Session = Depends(get_db),
                      current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'admin':
