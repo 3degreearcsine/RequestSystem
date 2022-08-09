@@ -28,7 +28,7 @@ def credentials_exception_handler(request: Request, exc: exceptions.CredentialsE
     exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not validate credentials")
 
     response = templates.TemplateResponse("popup.html", {"request": request, "error": exception.detail,
-                                                     'url': config.settings.url},
+                                                         'url': config.settings.url},
                                           status_code=exception.status_code, headers={"WWW-Authenticate": "Bearer"})
     response.delete_cookie("Authorization")
     return response

@@ -41,8 +41,9 @@ def user_dcsrf_history(response: Response, db: Session = Depends(get_db),
 def user_delete_dcsrf(response: Response, d_req: schemas.ReqDelete, db: Session = Depends(get_db),
                       current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'student':
-        result_del = db.query(models.SessionRequest).filter(models.SessionRequest.stu_email == current_user.email,
-                                                            models.SessionRequest.req_id == d_req.req_id).first()
+        del_req = db.query(models.SessionRequest).filter(models.SessionRequest.stu_email == current_user.email,
+                                                         models.SessionRequest.req_id == d_req.req_id)
+        result_del = del_req.first()
         if result_del is None:
             session.remove()
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,

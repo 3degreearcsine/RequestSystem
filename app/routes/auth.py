@@ -19,7 +19,9 @@ def login(request: Request, user_credentials: OAuth2PasswordRequestForm = Depend
             if not token_exists:
                 database.session.remove()
                 return main.templates.TemplateResponse('popup.html', context={'request': request, 'not_logged_out': 'Please logout to continue', 'url': config.settings.url}, status_code=status.HTTP_403_FORBIDDEN)
+
     user = db.query(models.Users).filter(models.Users.email == user_credentials.username.lower()).first()
+
     if not user:
         database.session.remove()
         invalid_username_exception = HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=f"Invalid Credentials")
@@ -33,7 +35,7 @@ def login(request: Request, user_credentials: OAuth2PasswordRequestForm = Depend
 
     access_token = oauth2.create_access_token(data={"user_id": user.id, "user_email": user.email.lower(), "user_role": user.role.lower()})
 
-    if user.role =='student':
+    if user.role == 'student':
         response = RedirectResponse(url="/student_profile", status_code=status.HTTP_302_FOUND)
     elif user.role == 'tutor':
         response = RedirectResponse(url="/tutor_profile", status_code=status.HTTP_302_FOUND)
