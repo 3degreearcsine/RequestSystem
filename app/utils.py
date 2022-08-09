@@ -16,12 +16,14 @@ def verfiy(plain_password, hashed_password):
 
 
 def check_if_blacklisted(token: str):
-    b_l_t_result = Query([models.BlackListedTokens]).filter(models.BlackListedTokens.token == token).with_session(database.session).first()
+    b_l_t_result = Query([models.BlackListedTokens]).filter(models.BlackListedTokens.token ==
+                                                            token).with_session(database.session).first()
     return b_l_t_result
 
 
 def check_if_admin_exist(role: str):
-    chk_admin_exist_result = Query([models.Users]).filter(models.Users.role == role).with_session(database.session).first()
+    chk_admin_exist_result = Query([models.Users]).filter(models.Users.role ==
+                                                          role).with_session(database.session).first()
     return chk_admin_exist_result
 
 
@@ -55,7 +57,8 @@ def check_if_email_exists(email: str):
 
 def check_course(id: int, subject: str):
     chk_course_result = Query([models.Student]).filter(models.Student.user_id ==
-                                                       id).filter(models.Student.course_name == subject).with_session(database.session).first()
+                                                       id).filter(models.Student.course_name ==
+                                                                  subject).with_session(database.session).first()
     return chk_course_result
 
 
