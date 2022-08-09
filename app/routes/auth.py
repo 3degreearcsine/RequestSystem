@@ -27,7 +27,7 @@ def login(request: Request, user_credentials: OAuth2PasswordRequestForm = Depend
         invalid_username_exception = HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=f"Invalid Credentials")
         return main.templates.TemplateResponse('popup.html', context={'request': request,
                                                                       'error': invalid_username_exception.detail, 'url': config.settings.url}, status_code=invalid_username_exception.status_code)
-    if not utils.verfiy(user_credentials.password, user.password):
+    if not utils.verify(user_credentials.password, user.password):
         database.session.remove()
         invalid_password_exception = HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=f"Invalid Credentials")
         return main.templates.TemplateResponse('popup.html', context={'request': request,

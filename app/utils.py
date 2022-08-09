@@ -11,7 +11,7 @@ def hash(password: str):
     return pwd_context.hash(password)
 
 
-def verfiy(plain_password, hashed_password):
+def verify(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
 
@@ -19,12 +19,6 @@ def check_if_blacklisted(token: str):
     b_l_t_result = Query([models.BlackListedTokens]).filter(models.BlackListedTokens.token ==
                                                             token).with_session(database.session).first()
     return b_l_t_result
-
-
-def check_if_admin_exist(role: str):
-    chk_admin_exist_result = Query([models.Users]).filter(models.Users.role ==
-                                                          role).with_session(database.session).first()
-    return chk_admin_exist_result
 
 
 def check_if_profile_complete(user_id: int, role: str):
@@ -40,6 +34,12 @@ def check_if_profile_complete(user_id: int, role: str):
         chk_admin_profile_result = Query([models.Admin]).filter(models.Admin.user_id ==
                                                                 user_id).with_session(database.session).first()
         return chk_admin_profile_result
+
+
+def check_if_admin_exist(role: str):
+    chk_admin_exist_result = Query([models.Users]).filter(models.Users.role ==
+                                                          role).with_session(database.session).first()
+    return chk_admin_exist_result
 
 
 def check_if_token_expired(token: str):
