@@ -9,7 +9,7 @@ router = APIRouter(tags=['Recording Request'])
 
 
 @router.post("/student_profile/rr/new_rrf", status_code=status.HTTP_201_CREATED, response_model=schemas.RecReqOut)
-def user_new_rrf(response: Response, n_req: schemas.RecReq, db: Session = Depends(get_db),
+def user_new_rrf(n_req: schemas.RecReq, db: Session = Depends(get_db),
                  current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'student':
         match_req_sub = utils.check_course(current_user.id, n_req.subject)
@@ -27,8 +27,7 @@ def user_new_rrf(response: Response, n_req: schemas.RecReq, db: Session = Depend
 
 
 @router.get("/student_profile/rr/rrf_history", response_model=List[schemas.RecReqOut])
-def user_rrf_history(response: Response, db: Session = Depends(get_db),
-                     current_user: int = Depends(oauth2.get_current_user)):
+def user_rrf_history(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'student':
         rrf_his = db.query(models.RecRequest).filter(models.RecRequest.stu_email == current_user.email).all()
         database.session.remove()
@@ -38,7 +37,7 @@ def user_rrf_history(response: Response, db: Session = Depends(get_db),
 
 
 @router.delete("/student_profile/rr/delete_rrf")
-def user_delete_rrf(response: Response, d_req: schemas.ReqDelete, db: Session = Depends(get_db),
+def user_delete_rrf(d_req: schemas.ReqDelete, db: Session = Depends(get_db),
                     current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'student':
         del_req = db.query(models.RecRequest).filter(models.RecRequest.stu_email == current_user.email,

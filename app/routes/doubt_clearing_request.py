@@ -9,7 +9,7 @@ router = APIRouter(tags=['Doubt Clearing Request'])
 
 
 @router.post("/student_profile/dcsr/new_dcsr", status_code=status.HTTP_201_CREATED, response_model=schemas.DCSReqOut)
-def user_new_dcsrf(response: Response, n_dcsreq: schemas.DCSReq, db: Session = Depends(get_db),
+def user_new_dcsrf(n_dcsreq: schemas.DCSReq, db: Session = Depends(get_db),
                    current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'student':
         match_sub = utils.check_course(current_user.id, n_dcsreq.subject)
@@ -27,7 +27,7 @@ def user_new_dcsrf(response: Response, n_dcsreq: schemas.DCSReq, db: Session = D
 
 
 @router.get("/student_profile/dcsr/dcsr_history", response_model=List[schemas.DCSReqOut])
-def user_dcsrf_history(response: Response, db: Session = Depends(get_db),
+def user_dcsrf_history(db: Session = Depends(get_db),
                        current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'student':
         dcsrf_his = db.query(models.SessionRequest).filter(models.SessionRequest.stu_email == current_user.email).all()
@@ -38,7 +38,7 @@ def user_dcsrf_history(response: Response, db: Session = Depends(get_db),
 
 
 @router.delete("/student_profile/dcsr/delete_dcsr")
-def user_delete_dcsrf(response: Response, d_req: schemas.ReqDelete, db: Session = Depends(get_db),
+def user_delete_dcsrf(d_req: schemas.ReqDelete, db: Session = Depends(get_db),
                       current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'student':
         del_req = db.query(models.SessionRequest).filter(models.SessionRequest.stu_email == current_user.email,
