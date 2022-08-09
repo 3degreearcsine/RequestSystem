@@ -8,7 +8,7 @@ from pydantic.class_validators import List
 router = APIRouter(tags=['Recording Request'])
 
 
-@router.post("/student_profile/rr/new_rrf", status_code=status.HTTP_201_CREATED, response_model=schemas.RecReqOut)
+@router.post("/student_profile/rr/new_rr", status_code=status.HTTP_201_CREATED, response_model=schemas.RecReqOut)
 def user_new_rrf(n_req: schemas.RecReq, db: Session = Depends(get_db),
                  current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'student':
@@ -26,7 +26,7 @@ def user_new_rrf(n_req: schemas.RecReq, db: Session = Depends(get_db),
     raise exceptions.ForbiddenException
 
 
-@router.get("/student_profile/rr/rrf_history", response_model=List[schemas.RecReqOut])
+@router.get("/student_profile/rr/rr_history", response_model=List[schemas.RecReqOut])
 def user_rrf_history(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'student':
         rrf_his = db.query(models.RecRequest).filter(models.RecRequest.stu_email == current_user.email).all()
@@ -36,7 +36,7 @@ def user_rrf_history(db: Session = Depends(get_db), current_user: int = Depends(
     raise exceptions.ForbiddenException
 
 
-@router.delete("/student_profile/rr/delete_rrf")
+@router.delete("/student_profile/rr/delete_rr")
 def user_delete_rrf(d_req: schemas.ReqDelete, db: Session = Depends(get_db),
                     current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'student':
