@@ -23,10 +23,11 @@ class Users(Base):
 
 contact_int = mysql.BIGINT
 
+
 class Student(Base):
     __tablename__ = 'student'
     stu_id = Column(Integer, primary_key=True, nullable=False)
-    user_id = Column(Integer, ForeignKey("user.id"), nullable=False, unique=True)
+    user_id = Column(Integer, ForeignKey("user.id", onupdate="cascade", ondelete="CASCADE"), nullable=False, unique=True)
     dob = Column(DateTime, nullable=False)
     course_name = Column(VARCHAR(20), nullable=False)
     address = Column(VARCHAR(100), nullable=False)
@@ -40,7 +41,7 @@ class Student(Base):
 class Admin(Base):
     __tablename__ = 'admin'
     admin_id = Column(Integer, primary_key=True, nullable=False)
-    user_id = Column(Integer, ForeignKey("user.id"), nullable=False, unique=True)
+    user_id = Column(Integer, ForeignKey("user.id", onupdate="cascade", ondelete="CASCADE"), nullable=False, unique=True)
     dob = Column(DateTime, nullable=False)
     address = Column(VARCHAR(100), nullable=False)
     contact_no = Column(contact_int(10), nullable=False, unique=True)
@@ -52,7 +53,7 @@ class Admin(Base):
 class Tutor(Base):
     __tablename__ = 'tutor'
     tutor_id = Column(Integer, primary_key=True, nullable=False)
-    user_id = Column(Integer, ForeignKey("user.id"), nullable=False, unique=True)
+    user_id = Column(Integer, ForeignKey("user.id", onupdate="cascade", ondelete="CASCADE"), nullable=False, unique=True)
     tutor_of = Column(VARCHAR(20), nullable=False, unique=True)
     dob = Column(DateTime, nullable=False)
     address = Column(VARCHAR(100), nullable=False)
@@ -66,7 +67,7 @@ class Tutor(Base):
 class RecRequest(Base):
     __tablename__ = 'recreq'
     req_id = Column(Integer, primary_key=True, nullable=False)
-    stu_email = Column(VARCHAR(40), ForeignKey("user.email"), primary_key=False, nullable=False)
+    stu_email = Column(VARCHAR(40), ForeignKey("user.email", onupdate="cascade", ondelete="CASCADE"), primary_key=False, nullable=False)
     lec_date = Column(DateTime, nullable=False)
     subject = Column(VARCHAR(20), nullable=False)
     req_reason = Column(VARCHAR(100), nullable=False)
@@ -81,7 +82,7 @@ class RecRequest(Base):
 class SessionRequest(Base):
     __tablename__ = 'dcsreq'
     req_id = Column(Integer, primary_key=True, nullable=False)
-    stu_email = Column(VARCHAR(40), ForeignKey("user.email"), primary_key=False, nullable=False)
+    stu_email = Column(VARCHAR(40), ForeignKey("user.email", onupdate="cascade", ondelete="CASCADE"), primary_key=False, nullable=False)
     subject = Column(VARCHAR(20), nullable=False)
     topic = Column(VARCHAR(70), nullable=False)
     req_reason = Column(VARCHAR(100), nullable=False)
