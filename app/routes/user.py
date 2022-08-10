@@ -68,7 +68,7 @@ def fill_profile_info(request: Request, current_user: int = Depends(oauth2.get_c
 
 
 @router.post("/complete_student_profile", response_class=HTMLResponse)
-def add_student_info(request: Request, response: Response, student: schemas.StudentInfo = Depends(), db: Session = Depends(get_db),
+def add_student_info(request: Request, student: schemas.StudentInfo = Depends(), db: Session = Depends(get_db),
                      current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'student':
         if len(str(student.contact_no)) < 10 or len(str(student.contact_no)) > 10:
@@ -93,7 +93,7 @@ def add_student_info(request: Request, response: Response, student: schemas.Stud
 
 
 @router.get("/student_profile", response_class=HTMLResponse)
-def student_profile(request: Request, response: Response, db: Session = Depends(get_db),
+def student_profile(request: Request, db: Session = Depends(get_db),
                     current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'student':
         if not utils.check_if_profile_complete(current_user.id, current_user.role):
@@ -125,7 +125,7 @@ def student_profile(request: Request, response: Response, db: Session = Depends(
 
 
 @router.post("/complete_admin_profile", response_class=HTMLResponse)
-def add_admin_info(request: Request, response: Response, admin: schemas.AdminInfo = Depends(), db: Session = Depends(get_db),
+def add_admin_info(request: Request, admin: schemas.AdminInfo = Depends(), db: Session = Depends(get_db),
                    current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'admin':
         if len(str(admin.contact_no)) < 10 or len(str(admin.contact_no)) > 10:
@@ -151,7 +151,7 @@ def add_admin_info(request: Request, response: Response, admin: schemas.AdminInf
 
 
 @router.get("/admin_profile", response_class=HTMLResponse)
-def admin_profile(request: Request, response: Response, db: Session = Depends(get_db),
+def admin_profile(request: Request, db: Session = Depends(get_db),
                   current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'admin':
         if not utils.check_if_profile_complete(current_user.id, current_user.role):
@@ -183,7 +183,7 @@ def admin_profile(request: Request, response: Response, db: Session = Depends(ge
 
 
 @router.post("/complete_tutor_profile", response_class=HTMLResponse)
-def add_tutor_info(request: Request, response: Response, tutor: schemas.TutorInfo = Depends(), db: Session = Depends(get_db),
+def add_tutor_info(request: Request, tutor: schemas.TutorInfo = Depends(), db: Session = Depends(get_db),
                    current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'tutor':
         tutor_already_exists = utils.check_if_tutor_exists(tutor.tutor_of)
@@ -217,7 +217,7 @@ def add_tutor_info(request: Request, response: Response, tutor: schemas.TutorInf
 
 
 @router.get("/tutor_profile", response_class=HTMLResponse)
-def tutor_profile(request: Request, response: Response, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+def tutor_profile(request: Request, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'tutor':
         if not utils.check_if_profile_complete(current_user.id, current_user.role):
             session.remove()
