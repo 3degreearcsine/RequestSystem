@@ -101,7 +101,8 @@ def student_profile(request: Request, db: Session = Depends(get_db),
         # Left outer join
         s_updated_profile = db.query(models.Users, models.Student).join(models.Student,
                                                                         models.Student.user_id == models.Users.id,
-                                                                        isouter=True).filter(models.Student.user_id == current_user.id).first()
+                                                                        isouter=True).filter(models.Student.user_id ==
+                                                                                             current_user.id).first()
         first_name = utils.check_if_email_exists(current_user.email).firstname
         last_name = utils.check_if_email_exists(current_user.email).lastname
 
@@ -116,9 +117,11 @@ def student_profile(request: Request, db: Session = Depends(get_db),
         s_info_dict = dict(zip(s_headings, values))
 
         session.remove()
-        return main.templates.TemplateResponse('profile.html', context={'request': request, 's_profile': json_s_profile,
-                                                                        'role': current_user.role, 'first_name': first_name,
-                                                                        'last_name': last_name, 'url': config.settings.url, 's_info_dict': s_info_dict},
+        return main.templates.TemplateResponse('profile.html',
+                                               context={'request': request, 's_profile': json_s_profile,
+                                                        'role': current_user.role, 'first_name': first_name,
+                                                        'last_name': last_name, 'url': config.settings.url,
+                                                        's_info_dict': s_info_dict},
                                                status_code=status.HTTP_200_OK)
     session.remove()
     raise exceptions.ForbiddenException
@@ -158,14 +161,17 @@ def admin_profile(request: Request, db: Session = Depends(get_db),
             session.remove()
             return RedirectResponse(url="/fill_profile_info", status_code=status.HTTP_302_FOUND)
         # Left outer join
-        a_updated_profile = db.query(models.Users, models.Admin).join(models.Admin, models.Admin.user_id == models.Users.id,
-                                                                      isouter=True).filter(models.Admin.user_id == current_user.id).first()
+        a_updated_profile = db.query(models.Users, models.Admin).join(models.Admin,
+                                                                      models.Admin.user_id == models.Users.id,
+                                                                      isouter=True).filter(models.Admin.user_id ==
+                                                                                           current_user.id).first()
         first_name = utils.check_if_email_exists(current_user.email).firstname
         last_name = utils.check_if_email_exists(current_user.email).lastname
 
         a_profile = schemas.AdminAllDetails.from_orm(a_updated_profile)
         json_a_profile = jsonable_encoder(a_profile)
-        a_headings = ["First Name", "Last Name", "Email", "Admin ID", "User ID", "Date of Birth", "Address", "Contact No"]
+        a_headings = ["First Name", "Last Name", "Email", "Admin ID", "User ID", "Date of Birth", "Address",
+                      "Contact No"]
         values = []
         for k, val in json_a_profile.items():
             for k2, val2 in val.items():
@@ -190,9 +196,11 @@ def add_tutor_info(request: Request, tutor: schemas.TutorInfo = Depends(), db: S
         if tutor_already_exists:
             session.remove()
             invalid_tutor_exception = HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                                               detail=f"Tutor of {tutor.tutor_of.title()} already exists with us")
+                                                    detail=f"Tutor of {tutor.tutor_of.title()} already exists with us")
             return main.templates.TemplateResponse('popup.html',
-                                                   context={'request': request, 'server_error': invalid_tutor_exception.detail, 'url': config.settings.url},
+                                                   context={'request': request,
+                                                            'server_error': invalid_tutor_exception.detail,
+                                                            'url': config.settings.url},
                                                    status_code=invalid_tutor_exception.status_code)
         if len(str(tutor.contact_no)) < 10 or len(str(tutor.contact_no)) > 10:
             session.remove()
@@ -223,8 +231,10 @@ def tutor_profile(request: Request, db: Session = Depends(get_db), current_user:
             session.remove()
             return RedirectResponse(url="/fill_profile_info", status_code=status.HTTP_302_FOUND)
         # Left outer join
-        t_updated_profile = db.query(models.Users, models.Tutor).join(models.Tutor, models.Tutor.user_id == models.Users.id,
-                                                                      isouter=True).filter(models.Tutor.user_id == current_user.id).first()
+        t_updated_profile = db.query(models.Users, models.Tutor).join(models.Tutor,
+                                                                      models.Tutor.user_id == models.Users.id,
+                                                                      isouter=True).filter(models.Tutor.user_id ==
+                                                                                           current_user.id).first()
         first_name = utils.check_if_email_exists(current_user.email).firstname
         last_name = utils.check_if_email_exists(current_user.email).lastname
 
