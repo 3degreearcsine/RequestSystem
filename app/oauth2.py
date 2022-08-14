@@ -79,7 +79,7 @@ def verify_access_token(token: str):
         role: str = payload.get("user_role")
         exp: int = payload.get("exp")
 
-        if id or email or role or exp is None:
+        if id is None or email is None or role is None or exp is None:
             raise exceptions.CredentialsException
 
         token_data = schemas.TokenData(id=id, email=email, role=role)
