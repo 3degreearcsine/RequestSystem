@@ -34,7 +34,7 @@ def all_tutors(db: Session = Depends(get_db), current_user: int = Depends(oauth2
 @router.get("/admin_profile/requests/all_pending_rr")
 def all_pending_requests(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'admin':
-        rrf_act_pending = db.query(models.SessionRequest).filter(models.SessionRequest.req_status == 'pending').all()
+        rrf_act_pending = db.query(models.RecRequest).filter(models.RecRequest.req_status == 'pending').all()
         database.session.remove()
         return rrf_act_pending
     database.session.remove()
