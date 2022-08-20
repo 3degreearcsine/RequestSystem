@@ -73,7 +73,7 @@ def forbidden_exception_handler(request: Request, exc: exceptions.ForbiddenExcep
                                       status_code=not_authenticated_exception.status_code)
 
 
-@app.middleware("https")
+@app.middleware("http")
 async def add_process_time_header(request: Request, call_next):
     start_time = time.time()
     response = await call_next(request)
