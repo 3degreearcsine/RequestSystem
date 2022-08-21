@@ -19,7 +19,7 @@ Base.query = session.query_property()
 
 
 def get_db():
-    db = SessionLocal()
+    db = session()
     try:
         yield db
     finally:
