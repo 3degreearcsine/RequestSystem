@@ -53,7 +53,7 @@ def all_pending_requests(db: Session = Depends(get_db), current_user: int = Depe
     raise exceptions.ForbiddenException
 
 
-@router.put("/admin_profile/requests/all_pending_rrf/action_rr")
+@router.put("/admin_profile/requests/all_pending_rr/action_rr")
 def admin_action_rrf(a_req: schemas.ReqAction, db: Session = Depends(get_db),
                      current_user: int = Depends(oauth2.get_current_user)):
     if current_user.role == 'admin':
